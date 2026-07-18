@@ -1,0 +1,7 @@
+[pocketbase]
+url = "http://127.0.0.1:8090"
+collection = "vocabulary"
+data_file = "data/vocabs_shuffled.csv"
+
+[chat_gwdg]
+model = "meta-llama-3.1-8b-instruct"

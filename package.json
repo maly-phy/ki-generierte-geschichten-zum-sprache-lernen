@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "csv-parser": "^3.2.1",
+    "dotenv": "^17.4.2",
+    "openai": "^6.47.0",
+    "pocketbase": "^0.27.0",
+    "toml": "^5.0.0"
+  }
+}
