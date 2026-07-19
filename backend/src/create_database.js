@@ -1,3 +1,4 @@
+//@ts-nocheck
 import PocketBase from "pocketbase";
 import fs from "fs";
 import csv from "csv-parser";
@@ -130,6 +131,33 @@ export async function pbFetchTranslation(word) {
     }
 };
 
-// const offsetWords= ["Zimmer", "arm"]
-// const words= await pbFetch(offsetWords);
-// console.log("Filtered words:", words);
+export async function createUser() {
+    return await pb.collection(config.users.collection).create({
+        user_id: crypto.randomUUID()
+    })
+};
+
+
+export async function storeUserData(offsetWords, story, userRecordId) {
+    if (offsetWords.length === 0 && story === "") {
+        return null;
+    } else {
+        return await pb.collection(config.users_data.collection).create({
+            offset_words: offsetWords,
+            generated_story: story,
+            user: userRecordId,
+        })
+    }
+};
+
+export async function loadUserData(userRecordId) {
+    const record = await pb.collection(config.users_data.collection).getFullList({
+        filter: `user = "${userRecordId}"`,
+        sort: "-created",
+        expand: "user"
+    })
+    return record[0] || null;
+}
+
+// const record= await loadUserData("asiutbkhdvyupuj");
+// console.log("Loaded user data:", record);

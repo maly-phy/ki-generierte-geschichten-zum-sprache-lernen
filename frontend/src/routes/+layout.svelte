@@ -1,7 +1,8 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
   import "$lib/app_style/style.css";
-  import { Translations } from "openai/resources/audio/translations.js";
+
+  const userRecordId = "asiutbkhdvyupuj"; // tmp userId
 
   let words = $state<string[]>([]);
   let offsetWords = $state<string[]>([]);
@@ -15,10 +16,13 @@
   let popupX = $state(0);
   let popupY = $state(0);
 
+  let userData = $state(false);
+
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
     loading = true;
     errorMessage = "";
+    await storeData(selectedWords, story, userRecordId);
 
     try {
       const response = await fetch("http://localhost:3000/story", {
@@ -65,12 +69,47 @@
     translation = cachedtranslations[word];
     popupVisible = true;
   }
-  $inspect(`offsetwords: ${offsetWords}`);
-  $inspect(`words: ${words}`);
-  $inspect(`cachedtranslations: ${cachedtranslations}`);
-  $inspect(`translation: ${translation}`);
+  const storeData = async (
+    offsetWords: string[],
+    story: string,
+    userRecordId: string,
+  ) => {
+    try {
+      const response = await fetch("/api/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          offsetWords,
+          story,
+          userRecordId,
+        }),
+      });
 
-  let { children } = $props<{ children: any }>();
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+    } catch (error) {
+      console.error(
+        error instanceof Error ? error.message : "Failed to store user data",
+      );
+    }
+  };
+
+  $inspect(offsetWords, "offsetWords");
+
+  let { children, data } = $props<{ children: any; data: any }>();
+
+  $effect(() => {
+    if (data?.userData) {
+      offsetWords = Array.isArray(data.userData.offset_words)
+        ? data.userData.offset_words
+        : [];
+      story = data.userData.generated_story ?? "";
+      userData = true;
+    }
+  });
 </script>
 
 <svelte:head>
@@ -80,6 +119,12 @@
 <div>
   <button onclick={startLearn} disabled={loading}>
     {loading ? "Generating..." : "Generate Story"}
+  </button>
+  <button
+    onclick={() => void storeData(offsetWords, story, userRecordId)}
+    disabled={loading}
+  >
+    Save
   </button>
 
   {#if story}

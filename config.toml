@@ -5,3 +5,9 @@ data_file = "data/vocabs_shuffled.csv"
 
 [chat_gwdg]
 model = "meta-llama-3.1-8b-instruct"
+
+[users]
+collection = "vocab_users"
+
+[users_data]
+collection = "vocab_user_data"
