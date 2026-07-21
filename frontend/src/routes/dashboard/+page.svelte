@@ -109,6 +109,7 @@
 
 <svelte:head>
   <link rel="icon" href={favicon} />
+  <style src="$lib/app_style/style.scss"></style>
 </svelte:head>
 
 <div>

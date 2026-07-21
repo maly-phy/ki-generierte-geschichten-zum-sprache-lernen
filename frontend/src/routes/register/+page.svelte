@@ -1,5 +1,6 @@
 <script>
   import { goto } from "$app/navigation";
+
   let email = $state("");
   let password = $state("");
   let passwordConfirm = $state("");

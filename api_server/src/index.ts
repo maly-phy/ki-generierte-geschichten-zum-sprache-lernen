@@ -1,5 +1,6 @@
 //@ts-nocheck
 import { Hono } from "hono"
+import { setCookie } from "hono/cookie";
 import {cors} from "hono/cors";
 import {pbFetch, pbFetchTranslation, registerUser, loginUser, verifyUser} from "../../backend/src/create_database.js";
 import {generateStory} from "../../backend/src/create_story.js";
@@ -7,7 +8,10 @@ import dotenv from "dotenv";
 
 const app = new Hono()
 
-app.use("*", cors()); // only during Dev
+app.use(
+  "*", 
+  cors({origin: "http://localhost:5173", credentials: true}),
+); // only during Dev
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
@@ -63,6 +67,14 @@ app.post("/api/login", async(c) => {
   try {
     const authData = await loginUser(email, password);
     if (authData && authData.record.verified === true) {
+      setCookie(c, "session", authData.token, {
+        httpOnly: true,
+        sameSite: "Lax", // Set to "Strict" in production
+        secure: false, // Set to true in production
+        path: "/",
+        maxAge: 60 * 60 * 24, // 1 day
+      });
+
       return c.json({
         success: true,
         token: authData.token,
