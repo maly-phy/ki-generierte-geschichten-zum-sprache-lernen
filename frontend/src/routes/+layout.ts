@@ -1,6 +1,21 @@
-const userRecordId = "asiutbkhdvyupuj"; // tmp userId
+import { browser } from "$app/environment";
+import { readStoredUserRecordId } from "$lib/stores/user_record";
 
 export async function load({ fetch }) {
+  if (!browser) {
+    return {
+      userData: null,
+    };
+  }
+
+  const userRecordId = readStoredUserRecordId();
+
+  if (!userRecordId) {
+    return {
+      userData: null,
+    };
+  }
+
   try {
     const response = await fetch(`/api/load?userRecordId=${userRecordId}`);
 
@@ -21,4 +36,4 @@ export async function load({ fetch }) {
       userData: null,
     };
   }
-}
+};

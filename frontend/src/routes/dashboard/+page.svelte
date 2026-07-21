@@ -1,8 +1,7 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
   import "$lib/app_style/style.css";
-
-  const userRecordId = "asiutbkhdvyupuj"; // tmp userId
+  import { userRecordId } from "$lib/stores/user_record";
 
   let words = $state<string[]>([]);
   let offsetWords = $state<string[]>([]);
@@ -16,16 +15,14 @@
   let popupX = $state(0);
   let popupY = $state(0);
 
-  let userData = $state(false);
-
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
     loading = true;
     errorMessage = "";
-    await storeData(selectedWords, story, userRecordId);
+    await storeData(selectedWords, story, $userRecordId);
 
     try {
-      const response = await fetch("http://localhost:3000/story", {
+      const response = await fetch("http://localhost:3000/api/story", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -60,7 +57,7 @@
 
     if (!(word in cachedtranslations)) {
       const popupReposne = await fetch(
-        `http://localhost:3000/translate/${encodeURIComponent(word)}`,
+        `http://localhost:3000/api/translate/${encodeURIComponent(word)}`,
       );
       const popupData = await popupReposne.json();
       cachedtranslations[word] = popupData.english ?? "No translation found";
@@ -97,9 +94,8 @@
     }
   };
 
-  $inspect(offsetWords, "offsetWords");
-
-  let { children, data } = $props<{ children: any; data: any }>();
+  $inspect("userId:", $userRecordId);
+  let { data } = $props<{ data: any }>();
 
   $effect(() => {
     if (data?.userData) {
@@ -107,7 +103,6 @@
         ? data.userData.offset_words
         : [];
       story = data.userData.generated_story ?? "";
-      userData = true;
     }
   });
 </script>
@@ -121,7 +116,7 @@
     {loading ? "Generating..." : "Generate Story"}
   </button>
   <button
-    onclick={() => void storeData(offsetWords, story, userRecordId)}
+    onclick={() => void storeData(offsetWords, story, $userRecordId)}
     disabled={loading}
   >
     Save
@@ -152,5 +147,3 @@
     </div>
   {/if}
 </div>
-
-{@render children()}

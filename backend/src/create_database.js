@@ -121,7 +121,8 @@ export async function pbFetch(offsetWords = []) {
 
 export async function pbFetchTranslation(word) {
     const { map } = await mapRecords();
-    const wordCleaned= word.replace(':', '').trim().toLowerCase();
+    // const wordCleaned= word.replace(':', '').trim().toLowerCase();
+    const wordCleaned= word.toLowerCase();
     const record = map.get(wordCleaned);
     if (record) {
         return record;
@@ -130,13 +131,6 @@ export async function pbFetchTranslation(word) {
         return null;
     }
 };
-
-export async function createUser() {
-    return await pb.collection(config.users.collection).create({
-        user_id: crypto.randomUUID()
-    })
-};
-
 
 export async function storeUserData(offsetWords, story, userRecordId) {
     if (offsetWords.length === 0 && story === "") {
@@ -159,5 +153,15 @@ export async function loadUserData(userRecordId) {
     return record[0] || null;
 }
 
-// const record= await loadUserData("asiutbkhdvyupuj");
-// console.log("Loaded user data:", record);
+export async function registerUser(email, password, passwordConfirm) {
+    await pb.collection(config.users.collection).create({
+        email,
+        password,
+        passwordConfirm
+    });
+    return await pb.collection(config.users.collection).requestVerification(email);
+}
+
+export async function loginUser(email, password) {
+    return await pb.collection(config.users.collection).authWithPassword(email, password);
+}
