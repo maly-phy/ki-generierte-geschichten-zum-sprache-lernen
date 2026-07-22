@@ -9,10 +9,10 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
-export async function openConfig() {
+export async function openConfig(file="../../config.toml") {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    const configPath = path.resolve(__dirname, "../../config.toml");
+    const configPath = path.resolve(__dirname, file);
     const config = toml.parse(fs.readFileSync(configPath, "utf8"));
     return config;
 }

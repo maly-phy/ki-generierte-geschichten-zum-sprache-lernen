@@ -1,25 +1,24 @@
 import type { Handle } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
-
-// export const handle: Handle = async ({event, resolve}) => {
-//     const session = event.cookies.get("session");
-//     event.locals.user = session ? {authenticated: true} : null;
-//     return resolve(event);
-// };
+import {openConfig} from '../../backend/src/create_database.js';
 
 export const handle: Handle = async ({event, resolve}) => {
-    const pb = new PocketBase('http://127.0.0.1:8090');
+    const config= await openConfig("../../config.toml");
+    const pb = new PocketBase(config.pocketbase.url);
     const token = event.cookies.get("session");
+
     if (token) {
         pb.authStore.save(token);
         try {
-            const authData = await pb.collection('vocab_users').authRefresh();
+            const authData = await pb.collection(config.users.collection).authRefresh();
+            console.log(authData)
             event.locals.user = {
-                id: authData.record?.id,
-                email: authData.record?.email,
-                authenticated: true
+                id: authData.record?.id ?? "",
+                email: authData.record?.email ?? "",
+                verified: authData.record?.verified ?? false
             }
-        } catch {
+        } catch (error) {
+            console.error("Error refreshing auth:", error);
             pb.authStore.clear();
             event.locals.user=null;
         }

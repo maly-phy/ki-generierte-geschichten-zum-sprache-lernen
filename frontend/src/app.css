@@ -74,6 +74,7 @@
     padding: 0;
     padding-left: 0;
     padding-right: 0;
+    min-width: 40%;
 }
 #dropdown-items {
     display: flex;

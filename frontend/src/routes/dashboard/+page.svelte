@@ -1,7 +1,5 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
-  import { userAuth } from "$lib/stores/user_auth";
-  import { userRecordId } from "$lib/stores/user_record";
 
   let words = $state<string[]>([]);
   let offsetWords = $state<string[]>([]);
@@ -21,7 +19,7 @@
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
     loading = true;
-    await storeData(selectedWords, story, $userRecordId);
+    await storeData(selectedWords, story, data.userAuth?.id ?? "");
     successMessage = "";
 
     try {
@@ -94,14 +92,8 @@
       );
     }
   };
-
-  let { data } = $props<{
-    data: {
-      userAuth: { authenticated: boolean; email?: string; id?: string } | null;
-      userData?: { offset_words?: string[]; generated_story?: string };
-    };
-  }>();
-  $inspect("Auth", data);
+  let { data } = $props();
+  $inspect("authData", data.userAuth);
 
   $effect(() => {
     if (data?.userData) {
@@ -124,23 +116,21 @@
       class="navbar-burger"
       aria-label="menu"
       aria-expanded="false"
-      data-target="navbarBasicExample"
+      data-target="navbarMenu"
     >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </div>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div id="navbarMenu" class="navbar-menu is-centered">
     <div id="navbar-end" class="navbar-end">
-      <div class="navbar-item has-dropdown is-hoverable">
-        <div class="navbar-link">
-          {data.userAuth?.email ?? $userAuth?.email ?? "Email"}
-        </div>
+      <div
+        id="dropdown-arrow"
+        class="navbar-item has-dropdown is-hoverable is-centered"
+      >
+        <div class="navbar-link is-centered">{data.userAuth?.email ?? ""}</div>
         <div id="dropdown-menu" class="navbar-dropdown is-right is-boxed">
-          <div class="navbar-item is-size-7 has-text-grey">
-            ID: {data.userAuth?.id ?? $userAuth?.id ?? "unknown"}
-          </div>
           <a id="dropdown-items" class="navbar-item" href="/">
             <span class="icon">
               <i class="fas fa-sign-out-alt"></i>
@@ -167,7 +157,8 @@
       <button
         id="save-story-btn"
         class="button is-link is-soft"
-        onclick={() => void storeData(offsetWords, story, $userRecordId)}
+        onclick={() =>
+          void storeData(offsetWords, story, data.userAuth?.id ?? "")}
         disabled={loading}
       >
         Save

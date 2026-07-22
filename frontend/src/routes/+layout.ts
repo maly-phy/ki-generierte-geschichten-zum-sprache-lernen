@@ -1,21 +1,8 @@
-import { browser } from "$app/environment";
-import { readStoredUserRecordId } from "$lib/stores/user_record";
+import type { LayoutLoad } from "./$types";
 
 
-export async function load({ fetch }) {
-  if (!browser) {
-    return {
-      userData: null,
-    };
-  }
-  console.log(fetch)
-  const userRecordId = readStoredUserRecordId();
-
-  if (!userRecordId) {
-    return {
-      userData: null,
-    };
-  }
+export const load: LayoutLoad = async ({ fetch, data }) => {
+  const userRecordId= data.userAuth?.id ?? "";
 
   try {
     const response = await fetch(`/api/load?userRecordId=${userRecordId}`);
@@ -26,6 +13,7 @@ export async function load({ fetch }) {
 
     const loadedData = await response.json();
     return {
+      ...data,
       userData: loadedData?.userData ?? null,
     };
   } catch (error) {
