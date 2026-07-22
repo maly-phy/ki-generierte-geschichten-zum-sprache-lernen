@@ -1,24 +1,25 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
-  import "$lib/app_style/style.css";
   import { userRecordId } from "$lib/stores/user_record";
 
   let words = $state<string[]>([]);
   let offsetWords = $state<string[]>([]);
   let story = $state<string>("");
   let loading = $state(false);
-  let errorMessage = $state("");
+  let successMessage = $state("");
 
   let translation = $state<string>("");
+  let selectedWord = $state<string>("");
   let cachedtranslations = $state<Record<string, string>>({}); // using caching
-  let popupVisible = $state(false);
-  let popupX = $state(0);
-  let popupY = $state(0);
+  let isTranslationModalOpen = $state(false);
+
+  const closeTranslationModal = () => {
+    isTranslationModalOpen = false;
+  };
 
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
     loading = true;
-    errorMessage = "";
     await storeData(selectedWords, story, $userRecordId);
 
     try {
@@ -38,33 +39,29 @@
       words = Array.isArray(data.words) ? data.words : [];
       story = data.story ?? "";
       offsetWords = [];
-      popupVisible = false;
+      closeTranslationModal();
     } catch (error) {
-      errorMessage =
-        error instanceof Error ? error.message : "Failed to start learning";
+      error instanceof Error ? error.message : "Failed to start learning";
     } finally {
       loading = false;
     }
   };
 
-  async function selectWord(word: string, event: MouseEvent) {
+  async function selectWord(word: string) {
     offsetWords = [...offsetWords, word];
     offsetWords = Array.from(new Set(offsetWords));
 
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    popupX = rect.left + window.scrollX;
-    popupY = rect.bottom + window.scrollY + 5;
-
     if (!(word in cachedtranslations)) {
-      const popupReposne = await fetch(
+      const popupResponse = await fetch(
         `http://localhost:3000/api/translate/${encodeURIComponent(word)}`,
       );
-      const popupData = await popupReposne.json();
+      const popupData = await popupResponse.json();
       cachedtranslations[word] = popupData.english ?? "No translation found";
     }
 
+    selectedWord = word;
     translation = cachedtranslations[word];
-    popupVisible = true;
+    isTranslationModalOpen = true;
   }
   const storeData = async (
     offsetWords: string[],
@@ -72,6 +69,7 @@
     userRecordId: string,
   ) => {
     try {
+      successMessage = "";
       const response = await fetch("/api/store", {
         method: "POST",
         headers: {
@@ -87,6 +85,7 @@
       if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}`);
       }
+      successMessage = "Story successfully saved!";
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : "Failed to store user data",
@@ -94,7 +93,6 @@
     }
   };
 
-  $inspect("userId:", $userRecordId);
   let { data } = $props<{ data: any }>();
 
   $effect(() => {
@@ -109,42 +107,93 @@
 
 <svelte:head>
   <link rel="icon" href={favicon} />
-  <style src="$lib/app_style/style.scss"></style>
 </svelte:head>
 
-<div>
-  <button onclick={startLearn} disabled={loading}>
-    {loading ? "Generating..." : "Generate Story"}
-  </button>
-  <button
-    onclick={() => void storeData(offsetWords, story, $userRecordId)}
-    disabled={loading}
-  >
-    Save
-  </button>
-
-  {#if story}
-    <p>
-      {#each story.split(/(\s+)/) as token}
-        {#if token.trim() === ""}
-          {token}
-        {:else}
-          <button
-            type="button"
-            class:selected={offsetWords.includes(token)}
-            onclick={(evt) => selectWord(token, evt)}
-          >
-            {token}
-          </button>
-        {/if}
-      {/each}
-    </p>
-  {/if}
-
-  {#if popupVisible}
-    <div class="popup" style:left="{popupX}px" style:top="{popupY}px">
-      {translation}
-      <button onclick={() => (popupVisible = false)}>x</button>
+<section id="dash-section" class="section">
+  <div id="dash-container" class="container">
+    <div id="dash-btns" class="buttons">
+      <button
+        id="story-generate-btn"
+        class="button is-link"
+        onclick={startLearn}
+        disabled={loading}
+      >
+        {loading ? "Generating..." : "Generate Story"}
+      </button>
+      <button
+        id="save-story-btn"
+        class="button is-link is-soft"
+        onclick={() => void storeData(offsetWords, story, $userRecordId)}
+        disabled={loading}
+      >
+        Save
+      </button>
     </div>
-  {/if}
-</div>
+
+    {#if successMessage}
+      <article class="message is-success">
+        <div class="message-header">
+          <p>{successMessage}</p>
+          <button
+            class="delete"
+            aria-label="delete"
+            onclick={() => (successMessage = "")}
+          >
+          </button>
+        </div>
+      </article>
+    {/if}
+
+    {#if story}
+      <p>
+        {#each story.split(/(\s+)/) as token}
+          {#if token.trim() === ""}
+            {token}
+          {:else}
+            <button
+              id="selected-word-btn"
+              type="button"
+              class:selected={offsetWords.includes(token)}
+              onclick={() => selectWord(token)}
+            >
+              {token}
+            </button>
+          {/if}
+        {/each}
+      </p>
+    {/if}
+
+    <div class="modal" class:is-active={isTranslationModalOpen}>
+      <button
+        class="modal-background"
+        type="button"
+        aria-label="close translation modal"
+        onclick={closeTranslationModal}
+      ></button>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Translation</p>
+          <button
+            class="delete"
+            aria-label="close"
+            onclick={closeTranslationModal}
+          ></button>
+        </header>
+        <section class="modal-card-body">
+          <p class="title is-5">{selectedWord}</p>
+          <p>{translation}</p>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-link" onclick={closeTranslationModal}>
+            Close
+          </button>
+        </footer>
+      </div>
+      <button
+        class="modal-close is-large"
+        aria-label="close"
+        onclick={closeTranslationModal}
+      ></button>
+    </div>
+  </div>
+</section>

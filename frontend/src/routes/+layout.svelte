@@ -1,5 +1,5 @@
 <script>
-  import "bulma/css/bulma.min.css";
+  import "../app.css";
   let { children } = $props();
 </script>
 

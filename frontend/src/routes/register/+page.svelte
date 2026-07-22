@@ -29,13 +29,52 @@
   }
 </script>
 
-<input bind:value={email} placeholder="Email Address" type="email" />
-<input bind:value={password} placeholder="Password" type="password" />
-<input
-  bind:value={passwordConfirm}
-  placeholder="Confirm Password"
-  type="password"
-/>
-
-<button onclick={register}>Register</button>
-<button onclick={() => goto("/login")}>Back to Login</button>
+<section id="register-section" class="section">
+  <div id="register-container" class="container">
+    <h1 class="title">Create account</h1>
+    <div class="field">
+      <label class="label" for="email">Email</label>
+      <div class="control">
+        <input
+          id="email"
+          class="input"
+          type="email"
+          placeholder="john@example.com"
+          bind:value={email}
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="password">Password</label>
+      <div class="control">
+        <input
+          id="password"
+          class="input"
+          type="password"
+          placeholder="1234@abc"
+          bind:value={password}
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="passwordConfirm">Confirm Password</label>
+      <div class="control">
+        <input
+          id="passwordConfirm"
+          class="input"
+          type="password"
+          placeholder="1234@abc"
+          bind:value={passwordConfirm}
+        />
+      </div>
+    </div>
+    <button id="register-btn" class="button is-primary" onclick={register}
+      >Register</button
+    >
+    <button
+      id="back-login-btn"
+      class="button is-secondary"
+      onclick={() => goto("/login")}>Back to Login</button
+    >
+  </div>
+</section>

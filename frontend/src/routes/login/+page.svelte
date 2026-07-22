@@ -29,7 +29,23 @@
   }
 </script>
 
-<input bind:value={email} type="email" />
-<input bind:value={password} type="password" />
-
-<button onclick={login}>Login</button>
+<section id="login-section" class="section">
+  <div id="login-container" class="container">
+    <div class="field">
+      <label class="label" for="email">Email</label>
+      <input id="email" class="input" type="email" bind:value={email} />
+    </div>
+    <div class="field">
+      <label class="label" for="password">Password</label>
+      <input
+        id="password"
+        class="input"
+        type="password"
+        bind:value={password}
+      />
+    </div>
+    <button id="login-btn" class="button is-primary" onclick={login}>
+      Login
+    </button>
+  </div>
+</section>
