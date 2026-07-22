@@ -1,5 +1,6 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
+  import { userAuth } from "$lib/stores/user_auth";
   import { userRecordId } from "$lib/stores/user_record";
 
   let words = $state<string[]>([]);
@@ -21,6 +22,7 @@
     const selectedWords = [...offsetWords];
     loading = true;
     await storeData(selectedWords, story, $userRecordId);
+    successMessage = "";
 
     try {
       const response = await fetch("http://localhost:3000/api/story", {
@@ -93,7 +95,13 @@
     }
   };
 
-  let { data } = $props<{ data: any }>();
+  let { data } = $props<{
+    data: {
+      userAuth: { authenticated: boolean; email?: string; id?: string } | null;
+      userData?: { offset_words?: string[]; generated_story?: string };
+    };
+  }>();
+  $inspect("Auth", data);
 
   $effect(() => {
     if (data?.userData) {
@@ -109,9 +117,45 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
+<nav class="navbar is-danger is-fixed-top" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div
+      role="button"
+      class="navbar-burger"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarBasicExample"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div id="navbar-end" class="navbar-end">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <div class="navbar-link">
+          {data.userAuth?.email ?? $userAuth?.email ?? "Email"}
+        </div>
+        <div id="dropdown-menu" class="navbar-dropdown is-right is-boxed">
+          <div class="navbar-item is-size-7 has-text-grey">
+            ID: {data.userAuth?.id ?? $userAuth?.id ?? "unknown"}
+          </div>
+          <a id="dropdown-items" class="navbar-item" href="/">
+            <span class="icon">
+              <i class="fas fa-sign-out-alt"></i>
+            </span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <section id="dash-section" class="section">
   <div id="dash-container" class="container">
-    <div id="dash-btns" class="buttons">
+    <div id="dash-btns" class="buttons is-centered">
       <button
         id="story-generate-btn"
         class="button is-link"
@@ -145,24 +189,25 @@
     {/if}
 
     {#if story}
-      <p>
-        {#each story.split(/(\s+)/) as token}
-          {#if token.trim() === ""}
-            {token}
-          {:else}
-            <button
-              id="selected-word-btn"
-              type="button"
-              class:selected={offsetWords.includes(token)}
-              onclick={() => selectWord(token)}
-            >
+      <div class="notification">
+        <p>
+          {#each story.split(/(\s+)/) as token}
+            {#if token.trim() === ""}
               {token}
-            </button>
-          {/if}
-        {/each}
-      </p>
+            {:else}
+              <button
+                id="selected-word-btn"
+                type="button"
+                class:selected={offsetWords.includes(token)}
+                onclick={() => selectWord(token)}
+              >
+                {token}
+              </button>
+            {/if}
+          {/each}
+        </p>
+      </div>
     {/if}
-
     <div class="modal" class:is-active={isTranslationModalOpen}>
       <button
         class="modal-background"

@@ -1,5 +1,6 @@
 <script>
   import { goto } from "$app/navigation";
+  import { userAuth } from "$lib/stores/user_auth";
   import { userRecordId } from "$lib/stores/user_record";
 
   let email = $state("");
@@ -21,6 +22,11 @@
 
     if (result.success) {
       userRecordId.set(result.user.id);
+      userAuth.set({
+        authenticated: true,
+        id: result.user.id,
+        email: result.user.email,
+      });
       alert("Login successful");
       goto("/dashboard");
     } else {

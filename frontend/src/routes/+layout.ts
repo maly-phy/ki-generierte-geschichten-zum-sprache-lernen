@@ -1,13 +1,14 @@
 import { browser } from "$app/environment";
 import { readStoredUserRecordId } from "$lib/stores/user_record";
 
+
 export async function load({ fetch }) {
   if (!browser) {
     return {
       userData: null,
     };
   }
-
+  console.log(fetch)
   const userRecordId = readStoredUserRecordId();
 
   if (!userRecordId) {

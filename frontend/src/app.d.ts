@@ -13,7 +13,11 @@
 declare global {
 	namespace App {
 		interface Locals {
-			user: { authenticated: true } | null;
+			user: {
+				authenticated: boolean;
+				email?: string;
+				id?: string;
+			} | null;
 		}
 	}
 }
