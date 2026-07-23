@@ -1,8 +1,8 @@
 //@ts-nocheck
 import { Hono } from "hono"
-import { setCookie } from "hono/cookie";
+import { setCookie, deleteCookie } from "hono/cookie";
 import {cors} from "hono/cors";
-import {pbFetch, pbFetchTranslation, registerUser, loginUser, verifyUser} from "../../backend/src/create_database.js";
+import {pbFetch, pbFetchTranslation, registerUser, loginUser, verifyUser, getPocketBase} from "../../backend/src/create_database.js";
 import {generateStory} from "../../backend/src/create_story.js";
 import dotenv from "dotenv";
 
@@ -91,6 +91,20 @@ app.post("/api/login", async(c) => {
       success: false,
       error: err.message || "Invalid credentials, Please check your email and password."
     }, 401);
+  }
+});
+
+app.post("/api/logout", async (c) => {
+  try {
+    const {pb, _} = await getPocketBase("../../config.toml");
+    pb.authStore.clear();
+    deleteCookie(c, 'session', {
+      path: '/'
+    });
+    return c.json({success: true});
+  } catch (err) {
+    console.error(err);
+    return c.json({success: false, error: err.message || "Failed to logout"}, 500);
   }
 });
 

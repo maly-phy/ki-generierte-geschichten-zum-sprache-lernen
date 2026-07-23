@@ -71,10 +71,10 @@
     margin-right: 1rem;
 }
 #dropdown-menu {
-    padding: 0;
-    padding-left: 0;
-    padding-right: 0;
-    min-width: 40%;
+    padding: 0.2rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    min-width: 40% !important;
 }
 #dropdown-items {
     display: flex;
@@ -82,4 +82,17 @@
     justify-content: left;
     text-align: left;
     color: inherit;
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 0.9rem;
+}
+#logout-btn {
+    text-align: left;
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+    cursor: pointer;
+}
+#logout-btn:hover {
+    background-color: #f5f5f5;
 }

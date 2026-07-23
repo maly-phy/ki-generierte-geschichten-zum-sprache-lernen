@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import favicon from "$lib/assets/favicon.svg";
 
   let words = $state<string[]>([]);
@@ -93,7 +94,6 @@
     }
   };
   let { data } = $props();
-  $inspect("authData", data.userAuth);
 
   $effect(() => {
     if (data?.userData) {
@@ -103,6 +103,19 @@
       story = data.userData.generated_story ?? "";
     }
   });
+
+  const logout = async () => {
+    const response = await fetch("http://localhost:3000/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    const result = await response.json();
+    if (result.success) {
+      goto("/");
+    } else {
+      alert("Logout failed: " + result.error);
+    }
+  };
 </script>
 
 <svelte:head>
@@ -131,12 +144,14 @@
       >
         <div class="navbar-link is-centered">{data.userAuth?.email ?? ""}</div>
         <div id="dropdown-menu" class="navbar-dropdown is-right is-boxed">
-          <a id="dropdown-items" class="navbar-item" href="/">
-            <span class="icon">
-              <i class="fas fa-sign-out-alt"></i>
-            </span>
-            <span>Logout</span>
-          </a>
+          <div id="dropdown-items" class="navbar-item">
+            <button id="logout-btn" class="dropdown-items" onclick={logout}>
+              <span class="icon">
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+              <span>Logout</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

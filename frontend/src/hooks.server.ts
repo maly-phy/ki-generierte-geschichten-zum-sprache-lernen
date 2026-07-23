@@ -1,17 +1,14 @@
 import type { Handle } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
-import {openConfig} from '../../backend/src/create_database.js';
+import {getPocketBase} from '../../backend/src/create_database.js';
 
 export const handle: Handle = async ({event, resolve}) => {
-    const config= await openConfig("../../config.toml");
-    const pb = new PocketBase(config.pocketbase.url);
+    const {pb, config} = await getPocketBase("../../config.toml");
     const token = event.cookies.get("session");
-
     if (token) {
         pb.authStore.save(token);
         try {
             const authData = await pb.collection(config.users.collection).authRefresh();
-            console.log(authData)
             event.locals.user = {
                 id: authData.record?.id ?? "",
                 email: authData.record?.email ?? "",

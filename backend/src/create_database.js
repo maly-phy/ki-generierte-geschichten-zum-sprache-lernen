@@ -16,9 +16,14 @@ export async function openConfig(file="../../config.toml") {
     const config = toml.parse(fs.readFileSync(configPath, "utf8"));
     return config;
 }
-const config = await openConfig();
-const pb = new PocketBase(config.pocketbase.url);
-pb.autoCancellation(false);
+
+export async function getPocketBase(file="../../config.toml") {
+    const config = await openConfig(file);
+    const pb = new PocketBase(config.pocketbase.url);
+    pb.autoCancellation(false);
+    return {pb, config};
+}
+const {pb, config} = await getPocketBase();
 
 async function mapRecords() {
     let allRecords= null;
@@ -46,7 +51,7 @@ async function pbAuth(envPath="../.env") {
         authenticated=true;
 };
 
-console.log("authenticated", authenticated);
+// console.log("authenticated", authenticated);
 if (!authenticated) {
     await pbAuth();
 };
