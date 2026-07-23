@@ -116,6 +116,20 @@
       alert("Logout failed: " + result.error);
     }
   };
+
+  const toggleTheme = () => {
+    const themeIcon = document.getElementById("theme-icon");
+    const html = document.documentElement;
+    const isDark = html.getAttribute("data-theme") === "dark";
+
+    if (isDark) {
+      html.setAttribute("data-theme", "light");
+      if (themeIcon) themeIcon.className = "fas fa-sun";
+    } else {
+      html.setAttribute("data-theme", "dark");
+      if (themeIcon) themeIcon.className = "fas fa-moon";
+    }
+  };
 </script>
 
 <svelte:head>
@@ -138,6 +152,19 @@
 
   <div id="navbarMenu" class="navbar-menu is-centered">
     <div id="navbar-end" class="navbar-end">
+      <div class="navbar-item is-centered">
+        <button
+          type="button"
+          id="theme-toggle-btn"
+          aria-label="toggle theme"
+          onclick={toggleTheme}
+        >
+          <span class="icon">
+            <i class="fas fa-sun" id="theme-icon"></i>
+          </span>
+        </button>
+      </div>
+
       <div
         id="dropdown-arrow"
         class="navbar-item has-dropdown is-hoverable is-centered"
