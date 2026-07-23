@@ -2,17 +2,26 @@
   import { goto } from "$app/navigation";
   import favicon from "$lib/assets/favicon.svg";
 
-  let words = $state<string[]>([]);
   let offsetWords = $state<string[]>([]);
   let story = $state<string>("");
   let loading = $state(false);
   let successMessage = $state("");
 
-  let translation = $state<string>("");
-  let selectedWord = $state<string>("");
-  let cachedtranslations = $state<Record<string, string>>({}); // using caching
-  let isTranslationModalOpen = $state(false);
+  let translation = $state<{
+    english: string;
+    example_english: string;
+    example_german: string;
+  }>({ english: "", example_english: "", example_german: "" });
 
+  let selectedWord = $state<string>("");
+  let cachedtranslations = $state<
+    Record<
+      string,
+      { english: string; example_english: string; example_german: string }
+    >
+  >({}); // using caching
+
+  let isTranslationModalOpen = $state(false);
   const closeTranslationModal = () => {
     isTranslationModalOpen = false;
   };
@@ -37,7 +46,6 @@
       }
 
       const data = await response.json();
-      words = Array.isArray(data.words) ? data.words : [];
       story = data.story ?? "";
       offsetWords = [];
       closeTranslationModal();
@@ -51,17 +59,26 @@
   async function selectWord(word: string) {
     offsetWords = [...offsetWords, word];
     offsetWords = Array.from(new Set(offsetWords));
+    const wordCleaned = word
+      .replace(",", "")
+      .replace(".", "")
+      .trim()
+      .toLowerCase();
 
-    if (!(word in cachedtranslations)) {
+    if (!(wordCleaned in cachedtranslations)) {
       const popupResponse = await fetch(
-        `http://localhost:3000/api/translate/${encodeURIComponent(word)}`,
+        `http://localhost:3000/api/translate/${encodeURIComponent(wordCleaned)}`,
       );
       const popupData = await popupResponse.json();
-      cachedtranslations[word] = popupData.english ?? "No translation found";
+      cachedtranslations[wordCleaned] = {
+        english: popupData.english ?? "No translation found",
+        example_english: popupData.example_english ?? "",
+        example_german: popupData.example_german ?? "",
+      };
     }
 
-    selectedWord = word;
-    translation = cachedtranslations[word];
+    selectedWord = wordCleaned;
+    translation = cachedtranslations[wordCleaned];
     isTranslationModalOpen = true;
   }
   const storeData = async (
@@ -117,7 +134,7 @@
     }
   };
 
-  const toggleTheme = () => {
+  const toggleTheme = async () => {
     const themeIcon = document.getElementById("theme-icon");
     const html = document.documentElement;
     const isDark = html.getAttribute("data-theme") === "dark";
@@ -250,7 +267,7 @@
       ></button>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Translation</p>
+          <p class="modal-card-title">Translation with example</p>
           <button
             class="delete"
             aria-label="close"
@@ -258,8 +275,11 @@
           ></button>
         </header>
         <section class="modal-card-body">
-          <p class="title is-5">{selectedWord}</p>
-          <p>{translation}</p>
+          <p class="title is-5">{selectedWord}: {translation.english}</p>
+          <div class="content">
+            <p>{translation.example_german}</p>
+            <p>{translation.example_english}</p>
+          </div>
         </section>
         <footer class="modal-card-foot">
           <button class="button is-link" onclick={closeTranslationModal}>

@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import toml from "toml";
 import path from "node:path";
 import { fileURLToPath } from "url";
+import {generateTranslation} from "./create_story.js";
 
 dotenv.config();
 
@@ -101,7 +102,13 @@ export async function pbFetch(offsetWords = []) {
         };
     }
     for (const word of offsetWords) {
-        const record= map.get(word.toLowerCase());
+        const wordCleaned = word
+            .replace(",", "")
+            .replace(".", "")
+            .trim()
+            .toLowerCase();
+
+        const record= map.get(wordCleaned);
         if (record) {
             offsetIds.push(record.vocab_id);
         } else {
@@ -125,14 +132,39 @@ export async function pbFetch(offsetWords = []) {
 };
 
 export async function pbFetchTranslation(word) {
-    const { map } = await mapRecords();
-    // const wordCleaned= word.replace(':', '').trim().toLowerCase();
-    const wordCleaned= word.toLowerCase();
+    const {allRecords, map } = await mapRecords();
+    const wordCleaned= word.replace(",", "").replace(".","").trim().toLowerCase();
     const record = map.get(wordCleaned);
-    if (record) {
+    
+    if (record && record.example_english !== "" && record.example_german !== "") {
         return record;
-    } else {
-        console.error(`No translation found for word "${word}"`);
+    }
+    const response= await generateTranslation(wordCleaned);
+    const wordEnglish= response.translation;
+    const exampleGerman= response.example_sentence_german;
+    const exampleEnglish= response.example_sentence_english;
+    const newRecord= {
+        english: wordEnglish,
+        example_german: exampleGerman,
+        example_english: exampleEnglish
+    }
+
+    if (record) {
+        await pb.collection(config.pocketbase.collection).update(record.id, newRecord);
+        console.log(`Updated record for word "${wordCleaned}"`);
+        return newRecord;
+    } 
+    else if (!record) {
+        await pb.collection(config.pocketbase.collection).create({
+            vocab_id: allRecords.length +1,
+            german: wordCleaned,
+            ...newRecord
+        });
+        console.log(`Created new record for word "${wordCleaned}"`);
+        return newRecord;
+    } 
+    else {
+        console.error(`No translation generated for word "${wordCleaned}"`);
         return null;
     }
 };
