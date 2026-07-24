@@ -26,9 +26,17 @@
         "Please verify your email. A verification link has been sent to your email.";
       registerMessage = "";
     } else {
-      registerMessage =
-        "This email is already registered, please login or resend the verification link or use a different email to register.";
       verifyMessage = "";
+      if (!email || !password || !passwordConfirm) {
+        registerMessage = "All fields are required.";
+      } else if (password && password !== passwordConfirm) {
+        registerMessage = "Passwords do not match.";
+      } else if (password && password.length < 8) {
+        registerMessage = "Password must be at least 8 characters long.";
+      } else {
+        registerMessage =
+          "This email is already registered, please login or resend the verification link or use a different email to register.";
+      }
     }
   }
 
@@ -108,15 +116,7 @@
       </button>
     {/if}
 
-    {#if !email || !password || !passwordConfirm}
-      <p class="help is-danger is-size-6 mt-4">All fields are required.</p>
-    {:else if password && password !== passwordConfirm}
-      <p class="help is-danger is-size-6 mt-4">Passwords do not match.</p>
-    {:else if password && password.length < 8}
-      <p class="help is-danger is-size-6 mt-4">
-        Password must be at least 8 characters long.
-      </p>
-    {:else if registerMessage}
+    {#if registerMessage}
       <p class="help is-danger is-size-6 mt-4">{registerMessage}</p>
     {:else if verifyMessage}
       <p class="help is-success is-size-6 mt-4">{verifyMessage}</p>

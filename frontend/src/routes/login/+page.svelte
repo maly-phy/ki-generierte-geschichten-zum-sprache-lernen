@@ -22,7 +22,7 @@
     if (result.success) {
       goto("/dashboard");
     } else {
-      loginMessage = "Please check your login email and password.";
+      loginMessage = "Please check your email and password.";
     }
   }
 </script>
@@ -47,11 +47,7 @@
     </button>
 
     {#if loginMessage}
-      <article class="message is-danger mt-4 has-text-centered">
-        <div class="message-body">
-          {loginMessage}
-        </div>
-      </article>
+      <p class="help is-danger is-size-6 mt-4">{loginMessage}</p>
     {/if}
   </div>
 </section>
