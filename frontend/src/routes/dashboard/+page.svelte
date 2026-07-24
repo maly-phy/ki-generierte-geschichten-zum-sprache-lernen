@@ -9,15 +9,29 @@
 
   let translation = $state<{
     english: string;
+    word_type: string[];
+    word_article: string;
     example_english: string;
     example_german: string;
-  }>({ english: "", example_english: "", example_german: "" });
+  }>({
+    english: "",
+    word_type: [],
+    word_article: "",
+    example_english: "",
+    example_german: "",
+  });
 
   let selectedWord = $state<string>("");
   let cachedtranslations = $state<
     Record<
       string,
-      { english: string; example_english: string; example_german: string }
+      {
+        english: string;
+        word_type: string[];
+        word_article: string;
+        example_english: string;
+        example_german: string;
+      }
     >
   >({}); // using caching
 
@@ -30,7 +44,6 @@
     const selectedWords = [...offsetWords];
     loading = true;
     await storeData(selectedWords, story, data.userAuth?.id ?? "");
-    successMessage = "";
 
     try {
       const response = await fetch("http://localhost:3000/api/story", {
@@ -48,6 +61,7 @@
       const data = await response.json();
       story = data.story ?? "";
       offsetWords = [];
+      successMessage = "";
       closeTranslationModal();
     } catch (error) {
       error instanceof Error ? error.message : "Failed to start learning";
@@ -59,11 +73,7 @@
   async function selectWord(word: string) {
     offsetWords = [...offsetWords, word];
     offsetWords = Array.from(new Set(offsetWords));
-    const wordCleaned = word
-      .replace(",", "")
-      .replace(".", "")
-      .trim()
-      .toLowerCase();
+    const wordCleaned = word.replace(",", "").replace(".", "").trim();
 
     if (!(wordCleaned in cachedtranslations)) {
       const popupResponse = await fetch(
@@ -72,6 +82,8 @@
       const popupData = await popupResponse.json();
       cachedtranslations[wordCleaned] = {
         english: popupData.english ?? "No translation found",
+        word_type: popupData.word_type.filter((w: string) => w !== "") ?? [],
+        word_article: popupData.word_article ?? "",
         example_english: popupData.example_english ?? "",
         example_german: popupData.example_german ?? "",
       };
@@ -120,6 +132,12 @@
       story = data.userData.generated_story ?? "";
     }
   });
+
+  const resetStory = async () => {
+    offsetWords = [];
+    story = "";
+    successMessage = "";
+  };
 
   const logout = async () => {
     const response = await fetch("http://localhost:3000/api/logout", {
@@ -211,20 +229,32 @@
         onclick={startLearn}
         disabled={loading}
       >
-        {loading ? "Generating..." : "Generate Story"}
+        {loading ? "Generating..." : story ? "Next Story" : "Generate Story"}
       </button>
-      <button
-        id="save-story-btn"
-        class="button is-link is-soft"
-        onclick={() =>
-          void storeData(offsetWords, story, data.userAuth?.id ?? "")}
-        disabled={loading}
-      >
-        Save
-      </button>
+      {#if story}
+        <button
+          id="save-story-btn"
+          class="button is-link is-soft"
+          onclick={() =>
+            void storeData(offsetWords, story, data.userAuth?.id ?? "")}
+          disabled={loading}
+        >
+          Save
+        </button>
+        <button
+          id="reset-btn"
+          class="button is-danger is-soft"
+          onclick={() => {
+            resetStory();
+          }}
+          disabled={loading}
+        >
+          Reset
+        </button>
+      {/if}
     </div>
 
-    {#if successMessage}
+    {#if successMessage && !loading}
       <article class="message is-success">
         <div class="message-header">
           <p>{successMessage}</p>
@@ -232,6 +262,7 @@
             class="delete"
             aria-label="delete"
             onclick={() => (successMessage = "")}
+            disabled={loading}
           >
           </button>
         </div>
@@ -275,8 +306,26 @@
           ></button>
         </header>
         <section class="modal-card-body">
-          <p class="title is-5">{selectedWord}: {translation.english}</p>
-          <div class="content">
+          <p class="title is-5">
+            {selectedWord}:
+            <span style="font-weight: normal; font-size: large;"
+              >{translation.english}</span
+            >
+          </p>
+          <div class="columns">
+            <div class="column is-half">
+              <strong>Type:</strong>
+              {translation.word_type.join(", ")}
+            </div>
+            {#if translation.word_article}
+              <div class="column">
+                <strong>Article:</strong>
+                {translation.word_article}
+              </div>
+            {/if}
+          </div>
+
+          <div id="translation-examples" class="content">
             <p>{translation.example_german}</p>
             <p>{translation.example_english}</p>
           </div>

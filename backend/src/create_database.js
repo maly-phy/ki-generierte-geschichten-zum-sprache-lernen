@@ -52,7 +52,6 @@ async function pbAuth(envPath="../.env") {
         authenticated=true;
 };
 
-// console.log("authenticated", authenticated);
 if (!authenticated) {
     await pbAuth();
 };
@@ -95,12 +94,6 @@ export async function pbFetch(offsetWords = []) {
     const {allRecords, map} = await mapRecords();
     let offsetIds= []
 
-    if (offsetWords.length === 0) {
-        const firstRecord= allRecords.find(r => r.vocab_id === 1);
-        if (firstRecord) {
-            offsetWords.push(firstRecord.german);
-        };
-    }
     for (const word of offsetWords) {
         const wordCleaned = word
             .replace(",", "")
@@ -116,14 +109,15 @@ export async function pbFetch(offsetWords = []) {
         }
     };
     
-    offsetIds.sort((a, b) => a-b);
     if (offsetIds.length < 5) {
-        let lastOffset= offsetIds[offsetIds.length -1];
         while (offsetIds.length < 5) {
-            lastOffset +=1;
-            offsetIds.push(lastOffset);
+            let randomId= Math.floor(Math.random() * allRecords.length) + 1;
+            offsetIds.push(randomId);
         }
     }
+    offsetIds.sort((a, b) => a-b);
+    // console.log(`Offset IDs: ${offsetIds}`);
+
     const filteredRecords= offsetIds.map(id => {
         const record= allRecords.find(r => r.vocab_id === id);
         return record ? record.german : null;
@@ -133,22 +127,26 @@ export async function pbFetch(offsetWords = []) {
 
 export async function pbFetchTranslation(word) {
     const {allRecords, map } = await mapRecords();
-    const wordCleaned= word.replace(",", "").replace(".","").trim().toLowerCase();
-    const record = map.get(wordCleaned);
+    const wordCleaned= word.replace(",", "").replace(".","").trim();
+    const record = map.get(wordCleaned.toLowerCase());
     
-    if (record && record.example_english !== "" && record.example_german !== "") {
+    if (record && record.example_english !== "" && record.example_german !== "" && record.word_type !== null) {
         return record;
     }
     const response= await generateTranslation(wordCleaned);
     const wordEnglish= response.translation;
+    const wordType= response.german_word_type;
+    const wordArticle= response.german_word_article;
     const exampleGerman= response.example_sentence_german;
     const exampleEnglish= response.example_sentence_english;
     const newRecord= {
         english: wordEnglish,
+        word_type: wordType,
+        word_article: wordArticle,
         example_german: exampleGerman,
-        example_english: exampleEnglish
+        example_english: exampleEnglish,
     }
-
+    // console.log("new record:", JSON.stringify(newRecord, null, 2));
     if (record) {
         await pb.collection(config.pocketbase.collection).update(record.id, newRecord);
         console.log(`Updated record for word "${wordCleaned}"`);

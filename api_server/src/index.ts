@@ -38,6 +38,8 @@ app.get("/api/translate/:word", async (c) => {
     if (record) {
       return c.json({
         english: record.english,
+        word_type: record.word_type,
+        word_article: record.word_article,
         example_english: record.example_english,
         example_german: record.example_german
       });

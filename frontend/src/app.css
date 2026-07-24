@@ -65,7 +65,7 @@
 }
 #dash-btns {
     margin-top: 50px;
-    gap: 50px;
+    gap: 80px;
 }
 #navbar-end {
     margin-right: 1rem;
@@ -127,6 +127,9 @@
 }
 [data-theme="dark"] #theme-toggle-btn:hover {
     background-color: inherit;
+}
+#translation-examples {
+    line-height: 1.1;
 }
 @media (prefers-color-scheme: dark) {
     :root {
