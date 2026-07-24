@@ -200,3 +200,7 @@ export async function registerUser(email, password, passwordConfirm) {
 export async function loginUser(email, password) {
     return await pb.collection(config.users.collection).authWithPassword(email, password);
 }
+
+export async function resendVerification(email) {
+    return await pb.collection(config.users.collection).requestVerification(email);
+}

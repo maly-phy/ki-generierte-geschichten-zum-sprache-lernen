@@ -2,7 +2,7 @@
 import { Hono } from "hono"
 import { setCookie, deleteCookie } from "hono/cookie";
 import {cors} from "hono/cors";
-import {pbFetch, pbFetchTranslation, registerUser, loginUser, verifyUser, getPocketBase} from "../../backend/src/create_database.js";
+import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase} from "../../backend/src/create_database.js";
 import {generateStory} from "../../backend/src/create_story.js";
 import dotenv from "dotenv";
 
@@ -52,9 +52,6 @@ app.get("/api/translate/:word", async (c) => {
 
 app.post("/api/register", async (c) => {
   const {email, password, passwordConfirm} = await c.req.json();
-  if (password !== passwordConfirm) {
-    return c.json({success: false, error: "Passwords do not match"}, 400);
-  }
   try {
     await registerUser(email, password, passwordConfirm);
     return c.json({
@@ -63,6 +60,19 @@ app.post("/api/register", async (c) => {
   } catch (err) {
     console.error(err);
     return c.json({success: false, error: err.message || "Registration failed"}, 400);
+  }
+});
+
+app.post("/api/request-verify", async (c) => {
+  const {email} = await c.req.json();
+  try {
+    await resendVerification(email);
+    return c.json({
+      success: true
+    });
+  } catch (err) {
+    console.error(err);
+    return c.json({success: false, error: err.message || "Verification failed"}, 400);
   }
 });
 

@@ -4,6 +4,8 @@
   let email = $state("");
   let password = $state("");
   let passwordConfirm = $state("");
+  let verifyMessage = $state("");
+  let registerMessage = $state("");
 
   async function register() {
     const response = await fetch("http://localhost:3000/api/register", {
@@ -20,11 +22,31 @@
     const result = await response.json();
 
     if (result.success) {
-      alert(
-        "Please verify your email. A verification link has been sent to your email.",
-      );
+      verifyMessage =
+        "Please verify your email. A verification link has been sent to your email.";
+      registerMessage = "";
     } else {
-      alert("Registration failed: " + result.error);
+      registerMessage =
+        "This email is already registered, please login or resend the verification link or use a different email to register.";
+      verifyMessage = "";
+    }
+  }
+
+  async function verifyAccount() {
+    const response = await fetch("http://localhost:3000/api/request-verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    const result = await response.json();
+    if (result.success) {
+      verifyMessage = "Verification email sent. Please check your inbox.";
+      registerMessage = "";
+    } else {
+      registerMessage = "Failed to send verification email. Please try again.";
+      verifyMessage = "";
     }
   }
 </script>
@@ -76,5 +98,28 @@
       class="button is-secondary"
       onclick={() => goto("/login")}>Back to Login</button
     >
+    {#if registerMessage && registerMessage.includes("This email is already registered")}
+      <button
+        id="resend-verify-btn"
+        class="button is-link mt-4"
+        onclick={verifyAccount}
+      >
+        Resend Verification Email
+      </button>
+    {/if}
+
+    {#if !email || !password || !passwordConfirm}
+      <p class="help is-danger is-size-6 mt-4">All fields are required.</p>
+    {:else if password && password !== passwordConfirm}
+      <p class="help is-danger is-size-6 mt-4">Passwords do not match.</p>
+    {:else if password && password.length < 8}
+      <p class="help is-danger is-size-6 mt-4">
+        Password must be at least 8 characters long.
+      </p>
+    {:else if registerMessage}
+      <p class="help is-danger is-size-6 mt-4">{registerMessage}</p>
+    {:else if verifyMessage}
+      <p class="help is-success is-size-6 mt-4">{verifyMessage}</p>
+    {/if}
   </div>
 </section>

@@ -3,6 +3,7 @@
 
   let email = $state("");
   let password = $state("");
+  let loginMessage = $state("");
 
   async function login() {
     const response = await fetch("http://localhost:3000/api/login", {
@@ -19,10 +20,9 @@
     const result = await response.json();
 
     if (result.success) {
-      alert("Login successful");
       goto("/dashboard");
     } else {
-      alert("Login failed: " + result.error);
+      loginMessage = "Please check your login email and password.";
     }
   }
 </script>
@@ -45,5 +45,13 @@
     <button id="login-btn" class="button is-primary" onclick={login}>
       Login
     </button>
+
+    {#if loginMessage}
+      <article class="message is-danger mt-4 has-text-centered">
+        <div class="message-body">
+          {loginMessage}
+        </div>
+      </article>
+    {/if}
   </div>
 </section>
