@@ -5,6 +5,8 @@
   let password = $state("");
   let passwordConfirm = $state("");
   let showPassword = $state(false);
+  let showConfirmPassword = $state(false);
+
   let verifyMessage = $state("");
   let registerMessage = $state("");
 
@@ -58,9 +60,11 @@
       verifyMessage = "";
     }
   }
-
   const togglePassword = () => {
     showPassword = !showPassword;
+  };
+  const toggleConfirmPassword = () => {
+    showConfirmPassword = !showConfirmPassword;
   };
 </script>
 
@@ -105,16 +109,29 @@
 
     <div class="field">
       <label class="label" for="passwordConfirm">Confirm Password</label>
-      <div class="control">
+      <div class="control password-control">
         <input
           id="passwordConfirm"
           class="input"
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="1234@abc"
           bind:value={passwordConfirm}
         />
+        <button
+          type="button"
+          class="password-toggle"
+          aria-label="toggle confirm password visibility"
+          aria-pressed={showConfirmPassword}
+          onclick={toggleConfirmPassword}
+        >
+          <span class="icon is-small">
+            <i class={showConfirmPassword ? "fas fa-eye-slash" : "fas fa-eye"}
+            ></i>
+          </span>
+        </button>
       </div>
     </div>
+
     <button id="register-btn" class="button is-primary" onclick={register}
       >Register</button
     >
