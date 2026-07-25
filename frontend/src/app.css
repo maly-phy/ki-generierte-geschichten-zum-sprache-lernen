@@ -154,6 +154,23 @@
 #translation-examples {
     line-height: 1.1;
 }
+#story-save-msg {
+    margin-top: 1rem;
+    width: 30%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+#story-save-msg span {
+    font-size: 1.1rem !important;
+}
+#story-save-close-btn {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    top: 1.2rem;
+    right: 0.8rem;
+}
 @media (prefers-color-scheme: dark) {
     :root {
         background-color: #333333;

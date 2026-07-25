@@ -1,5 +1,7 @@
 <script>
   import { goto } from "$app/navigation";
+  import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
+  import { messageControl } from "$lib/components/utils";
 
   let email = $state("");
   let password = $state("");
@@ -21,9 +23,11 @@
 
     if (result.success) {
       goto("/dashboard");
-    } else {
-      loginMessage = "Please check your email and password.";
+      return;
     }
+    messageControl((text) => {
+      loginMessage = text;
+    }, "Please check your email and password.");
   }
 </script>
 
@@ -33,15 +37,7 @@
       <label class="label" for="email">Email</label>
       <input id="email" class="input" type="email" bind:value={email} />
     </div>
-    <div class="field">
-      <label class="label" for="password">Password</label>
-      <input
-        id="password"
-        class="input"
-        type="password"
-        bind:value={password}
-      />
-    </div>
+    <PasswordVisibility label="Password" _id="password" bind:value={password} />
     <button id="login-btn" class="button is-primary" onclick={login}>
       Login
     </button>

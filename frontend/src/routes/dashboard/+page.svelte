@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import favicon from "$lib/assets/favicon.svg";
+  import { messageControl } from "$lib/components/utils";
 
   let offsetWords = $state<string[]>([]);
   let story = $state<string>("");
@@ -116,6 +117,13 @@
         throw new Error(`Request failed with status ${response.status}`);
       }
       successMessage = "Story successfully saved!";
+      messageControl(
+        (text) => {
+          successMessage = text;
+        },
+        successMessage,
+        3000,
+      );
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : "Failed to store user data",
@@ -255,18 +263,22 @@
     </div>
 
     {#if successMessage && !loading}
-      <article class="message is-success">
-        <div class="message-header">
-          <p>{successMessage}</p>
-          <button
-            class="delete"
-            aria-label="delete"
-            onclick={() => (successMessage = "")}
-            disabled={loading}
-          >
-          </button>
-        </div>
-      </article>
+      <div id="story-save-msg" class="notification is-success is-light">
+        <span id="story-save-icon" class="icon is-size-6 mr-2">
+          <i class="fas fa-check-circle"></i>
+        </span>
+        <span id="story-save-text" class="is-size-6">
+          Story is saved successfully!
+        </span>
+        <button
+          id="story-save-close-btn"
+          class="delete"
+          aria-label="delete"
+          onclick={() => (successMessage = "")}
+          disabled={loading}
+        >
+        </button>
+      </div>
     {/if}
 
     {#if story}

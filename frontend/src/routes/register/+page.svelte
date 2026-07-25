@@ -1,11 +1,11 @@
 <script>
   import { goto } from "$app/navigation";
+  import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
+  import { messageControl } from "$lib/components/utils";
 
   let email = $state("");
   let password = $state("");
   let passwordConfirm = $state("");
-  let showPassword = $state(false);
-  let showConfirmPassword = $state(false);
 
   let verifyMessage = $state("");
   let registerMessage = $state("");
@@ -25,9 +25,16 @@
     const result = await response.json();
 
     if (result.success) {
+      registerMessage = "";
       verifyMessage =
         "Please verify your email. A verification link has been sent to your email.";
-      registerMessage = "";
+      messageControl(
+        (text) => {
+          verifyMessage = text;
+        },
+        verifyMessage,
+        1000,
+      );
     } else {
       verifyMessage = "";
       if (!email || !password || !passwordConfirm) {
@@ -41,6 +48,9 @@
           "This email is already registered, please login or resend the verification link or use a different email to register.";
       }
     }
+    messageControl((text) => {
+      registerMessage = text;
+    }, registerMessage);
   }
 
   async function verifyAccount() {
@@ -60,12 +70,6 @@
       verifyMessage = "";
     }
   }
-  const togglePassword = () => {
-    showPassword = !showPassword;
-  };
-  const toggleConfirmPassword = () => {
-    showConfirmPassword = !showConfirmPassword;
-  };
 </script>
 
 <section id="register-section" class="section">
@@ -83,54 +87,13 @@
         />
       </div>
     </div>
-    <div class="field">
-      <label class="label" for="password">Password</label>
-      <div class="control password-control">
-        <input
-          id="password"
-          class="input"
-          type={showPassword ? "text" : "password"}
-          placeholder="1234@abc"
-          bind:value={password}
-        />
-        <button
-          type="button"
-          class="password-toggle"
-          aria-label="toggle password visibility"
-          aria-pressed={showPassword}
-          onclick={togglePassword}
-        >
-          <span class="icon is-small">
-            <i class={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
-          </span>
-        </button>
-      </div>
-    </div>
 
-    <div class="field">
-      <label class="label" for="passwordConfirm">Confirm Password</label>
-      <div class="control password-control">
-        <input
-          id="passwordConfirm"
-          class="input"
-          type={showConfirmPassword ? "text" : "password"}
-          placeholder="1234@abc"
-          bind:value={passwordConfirm}
-        />
-        <button
-          type="button"
-          class="password-toggle"
-          aria-label="toggle confirm password visibility"
-          aria-pressed={showConfirmPassword}
-          onclick={toggleConfirmPassword}
-        >
-          <span class="icon is-small">
-            <i class={showConfirmPassword ? "fas fa-eye-slash" : "fas fa-eye"}
-            ></i>
-          </span>
-        </button>
-      </div>
-    </div>
+    <PasswordVisibility label="Password" _id="password" bind:value={password} />
+    <PasswordVisibility
+      label="Confirm Password"
+      _id="passwordConfirm"
+      bind:value={passwordConfirm}
+    />
 
     <button id="register-btn" class="button is-primary" onclick={register}
       >Register</button
