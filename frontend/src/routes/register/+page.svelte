@@ -4,6 +4,7 @@
   let email = $state("");
   let password = $state("");
   let passwordConfirm = $state("");
+  let showPassword = $state(false);
   let verifyMessage = $state("");
   let registerMessage = $state("");
 
@@ -57,6 +58,10 @@
       verifyMessage = "";
     }
   }
+
+  const togglePassword = () => {
+    showPassword = !showPassword;
+  };
 </script>
 
 <section id="register-section" class="section">
@@ -76,16 +81,28 @@
     </div>
     <div class="field">
       <label class="label" for="password">Password</label>
-      <div class="control">
+      <div class="control password-control">
         <input
           id="password"
           class="input"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="1234@abc"
           bind:value={password}
         />
+        <button
+          type="button"
+          class="password-toggle"
+          aria-label="toggle password visibility"
+          aria-pressed={showPassword}
+          onclick={togglePassword}
+        >
+          <span class="icon is-small">
+            <i class={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+          </span>
+        </button>
       </div>
     </div>
+
     <div class="field">
       <label class="label" for="passwordConfirm">Confirm Password</label>
       <div class="control">

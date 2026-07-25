@@ -159,7 +159,7 @@
 
     if (isDark) {
       html.setAttribute("data-theme", "light");
-      if (themeIcon) themeIcon.className = "fas fa-sun";
+      if (themeIcon) themeIcon.className = "fas fa-sun has-text-warning";
     } else {
       html.setAttribute("data-theme", "dark");
       if (themeIcon) themeIcon.className = "fas fa-moon";
@@ -195,7 +195,7 @@
           onclick={toggleTheme}
         >
           <span class="icon">
-            <i class="fas fa-sun" id="theme-icon"></i>
+            <i class="fas fa-sun has-text-warning" id="theme-icon"></i>
           </span>
         </button>
       </div>
