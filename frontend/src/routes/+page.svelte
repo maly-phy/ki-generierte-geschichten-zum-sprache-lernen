@@ -5,7 +5,7 @@
 <section id="landing-section" class="hero is-danger is-fullheight is-centered">
   <div class="hero-body">
     <div id="landing-container" class="container has-text-centered">
-      <h1 class="title">Welcome to the AI Language Learning App</h1>
+      <h1 class="title">Welcome to the AI Language Learning App "AILLA"</h1>
       <h2 id="landing-subtitle" class="subtitle">
         Learn languages with AI-generated stories. Create an account or log in
         to get started.

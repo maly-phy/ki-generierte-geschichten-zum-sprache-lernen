@@ -228,131 +228,156 @@
   </div>
 </nav>
 
-<section id="dash-section" class="section">
-  <div id="dash-container" class="container">
-    <div id="dash-btns" class="buttons is-centered">
-      <button
-        id="story-generate-btn"
-        class="button is-link"
-        onclick={startLearn}
-        disabled={loading}
-      >
-        {loading ? "Generating..." : story ? "Next Story" : "Generate Story"}
-      </button>
-      {#if story}
+<div id="dash-page">
+  <section id="dash-section" class="section">
+    <div id="dash-container" class="container">
+      <div id="dash-btns" class="buttons is-centered">
         <button
-          id="save-story-btn"
-          class="button is-link is-soft"
-          onclick={() =>
-            void storeData(offsetWords, story, data.userAuth?.id ?? "")}
+          id="story-generate-btn"
+          class="button is-link"
+          onclick={startLearn}
           disabled={loading}
         >
-          Save
+          {loading ? "Generating..." : story ? "Next Story" : "Generate Story"}
         </button>
-        <button
-          id="reset-btn"
-          class="button is-danger is-soft"
-          onclick={() => {
-            resetStory();
-          }}
-          disabled={loading}
-        >
-          Reset
-        </button>
-      {/if}
-    </div>
-
-    {#if successMessage && !loading}
-      <div id="story-save-msg" class="notification is-success is-light">
-        <span id="story-save-icon" class="icon is-size-6 mr-2">
-          <i class="fas fa-check-circle"></i>
-        </span>
-        <span id="story-save-text" class="is-size-6">
-          Story is saved successfully!
-        </span>
-        <button
-          id="story-save-close-btn"
-          class="delete"
-          aria-label="delete"
-          onclick={() => (successMessage = "")}
-          disabled={loading}
-        >
-        </button>
-      </div>
-    {/if}
-
-    {#if story}
-      <div class="notification">
-        <p>
-          {#each story.split(/(\s+)/) as token}
-            {#if token.trim() === ""}
-              {token}
-            {:else}
-              <button
-                id="selected-word-btn"
-                type="button"
-                class:selected={offsetWords.includes(token)}
-                onclick={() => selectWord(token)}
-              >
-                {token}
-              </button>
-            {/if}
-          {/each}
-        </p>
-      </div>
-    {/if}
-    <div class="modal" class:is-active={isTranslationModalOpen}>
-      <button
-        class="modal-background"
-        type="button"
-        aria-label="close translation modal"
-        onclick={closeTranslationModal}
-      ></button>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Translation with example</p>
+        {#if story}
           <button
-            class="delete"
-            aria-label="close"
-            onclick={closeTranslationModal}
-          ></button>
-        </header>
-        <section class="modal-card-body">
-          <p class="title is-5">
-            {selectedWord}:
-            <span style="font-weight: normal; font-size: large;"
-              >{translation.english}</span
-            >
-          </p>
-          <div class="columns">
-            <div class="column is-half">
-              <strong>Type:</strong>
-              {translation.word_type.join(", ")}
-            </div>
-            {#if translation.word_article}
-              <div class="column">
-                <strong>Article:</strong>
-                {translation.word_article}
-              </div>
-            {/if}
-          </div>
-
-          <div id="translation-examples" class="content">
-            <p>{translation.example_german}</p>
-            <p>{translation.example_english}</p>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-link" onclick={closeTranslationModal}>
-            Close
+            id="save-story-btn"
+            class="button is-link is-soft"
+            onclick={() =>
+              void storeData(offsetWords, story, data.userAuth?.id ?? "")}
+            disabled={loading}
+          >
+            Save
           </button>
-        </footer>
+          <button
+            id="reset-btn"
+            class="button is-danger is-soft"
+            onclick={() => {
+              resetStory();
+            }}
+            disabled={loading}
+          >
+            Reset
+          </button>
+        {/if}
       </div>
-      <button
-        class="modal-close is-large"
-        aria-label="close"
-        onclick={closeTranslationModal}
-      ></button>
+
+      {#if successMessage && !loading}
+        <div id="story-save-msg" class="notification is-success is-light">
+          <span id="story-save-icon" class="icon is-size-6 mr-2">
+            <i class="fas fa-check-circle"></i>
+          </span>
+          <span id="story-save-text" class="is-size-6">
+            Story is saved successfully!
+          </span>
+          <button
+            id="story-save-close-btn"
+            class="delete"
+            aria-label="delete"
+            onclick={() => (successMessage = "")}
+            disabled={loading}
+          >
+          </button>
+        </div>
+      {/if}
+
+      {#if story}
+        <div class="notification">
+          <p>
+            {#each story.split(/(\s+)/) as token}
+              {#if token.trim() === ""}
+                {token}
+              {:else}
+                <button
+                  id="selected-word-btn"
+                  type="button"
+                  class:selected={offsetWords.includes(token)}
+                  onclick={() => selectWord(token)}
+                >
+                  {token}
+                </button>
+              {/if}
+            {/each}
+          </p>
+        </div>
+      {/if}
+      <div class="modal" class:is-active={isTranslationModalOpen}>
+        <button
+          class="modal-background"
+          type="button"
+          aria-label="close translation modal"
+          onclick={closeTranslationModal}
+        ></button>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Translation with example</p>
+            <button
+              class="delete"
+              aria-label="close"
+              onclick={closeTranslationModal}
+            ></button>
+          </header>
+          <section class="modal-card-body">
+            <p class="title is-5">
+              {selectedWord}:
+              <span style="font-weight: normal; font-size: large;"
+                >{translation.english}</span
+              >
+            </p>
+            <div class="columns">
+              <div class="column is-half">
+                <strong>Type:</strong>
+                {translation.word_type.join(", ")}
+              </div>
+              {#if translation.word_article}
+                <div class="column">
+                  <strong>Article:</strong>
+                  {translation.word_article}
+                </div>
+              {/if}
+            </div>
+
+            <div id="translation-examples" class="content">
+              <p>{translation.example_german}</p>
+              <p>{translation.example_english}</p>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-link" onclick={closeTranslationModal}>
+              Close
+            </button>
+          </footer>
+        </div>
+        <button
+          class="modal-close is-large"
+          aria-label="close"
+          onclick={closeTranslationModal}
+        ></button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <footer id="dash-footer" class="footer has-background-danger">
+    <div class="content has-text-centered">
+      <p class="footer-items">
+        2026 AILLA © All rights reserved
+        <span>|</span>
+
+        <a href="/github" target="_blank" rel="noopener norefererrer">
+          <strong>AILLA v0.0.1</strong>
+        </a>
+        <span>|</span>
+
+        <a href="/privacy" target="_blank" rel="noopener noreferrer">
+          <strong>Data Privacy</strong>
+        </a>
+        <span>|</span>
+
+        <a href="/imprint" target="_blank" rel="noopener noreferrer">
+          <strong>Imprint</strong>
+        </a>
+      </p>
+    </div>
+  </footer>
+</div>
