@@ -365,17 +365,17 @@
         <span>|</span>
 
         <a href="/github" target="_blank" rel="noopener norefererrer">
-          <strong>AILLA v0.0.1</strong>
+          AILLA v0.0.1
         </a>
         <span>|</span>
 
-        <a href="/privacy" target="_blank" rel="noopener noreferrer">
-          <strong>Data Privacy</strong>
+        <a href="/data-privacy" target="_blank" rel="noopener noreferrer">
+          Data Privacy
         </a>
         <span>|</span>
 
         <a href="/imprint" target="_blank" rel="noopener noreferrer">
-          <strong>Imprint</strong>
+          Imprint
         </a>
       </p>
     </div>
