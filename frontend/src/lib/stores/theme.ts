@@ -14,6 +14,21 @@ function createThemeStore() {
             set(value);
         }
     }
-}
+};
+
+function languageStore() {
+    const initial = browser ? localStorage.getItem('language') ?? 'en':'de';
+    const {subscribe, set} = writable(initial);
+    return {
+        subscribe,
+        set: (value:string)=> {
+            if(browser) {
+                localStorage.setItem('language', value);
+            }
+            set(value)
+        }
+    }
+};
 
 export const theme = createThemeStore();
+export const language = languageStore();

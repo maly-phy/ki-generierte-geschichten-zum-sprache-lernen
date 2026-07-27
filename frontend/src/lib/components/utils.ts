@@ -1,6 +1,5 @@
 import { get } from 'svelte/store';
-import { language } from '$lib/stores/language';
-import {theme} from '$lib/stores/theme';
+import {theme,language} from '$lib/stores/theme';
 import { goto } from '$app/navigation';
 
 let timer: ReturnType<typeof setTimeout>;
@@ -22,6 +21,8 @@ export async function toggleLanguage() {
   const next= current === 'en' ? 'de':'en';
   language.set(next);
   const currentPath = window.location.pathname;
-  const newPath = currentPath.replace(`/${current}`, `/${next}`);
-  await goto(newPath);
+  if(currentPath.startsWith(`/${current}`)) {
+    const newPath = currentPath.replace(`/${current}`, `/${next}`);
+    await goto(newPath);
+  }
 }

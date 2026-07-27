@@ -1,15 +1,20 @@
 <script>
   import "../app.css";
   import { page } from "$app/state";
-  import { language } from "$lib/stores/language";
-  import { theme } from "$lib/stores/theme";
+  import { theme, language } from "$lib/stores/theme";
 
   let { children } = $props();
 
   $effect(() => {
-    const lang = page.url.pathname.startsWith("/de") ? "de" : "en";
-    language.set(lang);
-    document.documentElement.lang = lang;
+    if (page.url.pathname.startsWith("/de")) {
+      language.set("de");
+      document.documentElement.lang = "de";
+    } else if (page.url.pathname.startsWith("/en")) {
+      language.set("en");
+      document.documentElement.lang = "en";
+    } else {
+      document.documentElement.lang = $language;
+    }
     document.documentElement.setAttribute("data-theme", $theme);
   });
 </script>

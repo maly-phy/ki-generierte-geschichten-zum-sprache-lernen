@@ -1,9 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import favicon from "$lib/assets/favicon.svg";
-  import { messageControl, toggleTheme } from "$lib/components/utils";
-  import { language } from "$lib/stores/language";
+  import {
+    messageControl,
+    toggleTheme,
+    toggleLanguage,
+  } from "$lib/components/utils";
+  import { theme, language } from "$lib/stores/theme";
+  import { onMount } from "svelte";
 
+  let mounted = $state(false);
   let offsetWords = $state<string[]>([]);
   let story = $state<string>("");
   let loading = $state(false);
@@ -41,6 +47,10 @@
   const closeTranslationModal = () => {
     isTranslationModalOpen = false;
   };
+
+  onMount(() => {
+    mounted = true;
+  });
 
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
@@ -186,13 +196,33 @@
       <div class="navbar-item is-centered">
         <button
           type="button"
+          id="language-toggle-btn"
+          aria-label="toggle language"
+          onclick={toggleLanguage}
+        >
+          {#if mounted}
+            {$language === "en" ? "DE" : "EN"}
+          {/if}
+        </button>
+      </div>
+
+      <div class="navbar-item is-centered">
+        <button
+          type="button"
           id="theme-toggle-btn"
           aria-label="toggle theme"
           onclick={toggleTheme}
         >
-          <span class="icon">
-            <i class="fas fa-sun has-text-warning" id="theme-icon"></i>
-          </span>
+          {#if mounted}
+            <span class="icon">
+              <i
+                class={$theme === "dark"
+                  ? "fas fa-moon"
+                  : "fas fa-sun has-text-warning"}
+                id="theme-icon"
+              ></i>
+            </span>
+          {/if}
         </button>
       </div>
 
@@ -349,7 +379,9 @@
   <footer id="dash-footer" class="footer has-background-danger">
     <div class="content has-text-centered">
       <p class="footer-items">
-        2026 AILLA © All rights reserved
+        {$language === "en"
+          ? "2026 AILLA © All rights reserved"
+          : "2026 AILLA © Alle Rechte vorbehalten"}
         <span>|</span>
 
         <a
@@ -366,7 +398,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          Data Privacy
+          {$language === "en" ? "Data Privacy" : "Datenschutz"}
         </a>
         <span>|</span>
 
@@ -375,7 +407,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          Imprint
+          {$language === "en" ? "Imprint" : "Impressum"}
         </a>
       </p>
     </div>

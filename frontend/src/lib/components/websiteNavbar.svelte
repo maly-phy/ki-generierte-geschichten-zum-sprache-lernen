@@ -1,7 +1,6 @@
 <script>
   import { toggleTheme, toggleLanguage } from "./utils";
-  import { language } from "$lib/stores/language";
-  import { theme } from "$lib/stores/theme";
+  import { theme, language } from "$lib/stores/theme";
   import { onMount } from "svelte";
 
   let mounted = $state(false);
