@@ -1,23 +1,6 @@
 @import "bulma/css/bulma.min.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
-
-/* html,
-body {
-    height: 100%;
-    margin: 0;
-}
-body {
-    min-height: 100vh;
-}
-.page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-.page-content {
-    flex: 1;
-} */
-
+    
 .selected {
     background: #70d870;
     color: white;
@@ -151,7 +134,7 @@ body {
 [data-theme="dark"] .navbar,
 [data-theme="dark"] .navbar .navbar-link {
     background-color: #333333;
-    color:#c4afc4
+    color: #e9dbdb /*#c4afc4*/
 }
 [data-theme="dark"] .selected {
     background: #079C31;
@@ -162,9 +145,6 @@ body {
     padding: 0;
     font-size: 1.1rem;
 }
-/* #theme-toggle-btn:hover {
-    background-color: #d49ea9;
-} */
 [data-theme="dark"] #theme-toggle-btn {
     color: #c4afc4;
 }
@@ -220,20 +200,17 @@ body {
 }
 [data-theme='dark'] .footer {
     background-color: #333333 !important;
-    color:#c4afc4;
+    color:#e9dbdb /*#c4afc4*/
 }
-/* [data-theme='dark'] .footer span {
-    color: #c4afc4;
-} */
-
 #privacy-content,
 #imprint-content {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 3rem;
+    padding-bottom: 4rem;
     padding-left: 4rem;
     padding-right: 4rem;
     line-height: 1.6;
     text-align: justify;
+    flex: 1;
 }
 #privacy-content p,
 #imprint-content p,
@@ -243,8 +220,24 @@ body {
     font-weight: 400;
     line-height: 1.6;
 }
-
-
+#privacy-content a:hover,
+#imprint-content a:hover {
+    text-decoration: underline;
+}
+[data-theme='dark'] #privacy-content p,
+[data-theme='dark'] #imprint-content p,
+[data-theme='dark'] #imprint-content ul {
+    color: rgba(255, 255, 255, 0.7);
+}
+#web-navbarMenu {
+    padding-right: 1rem;
+}
+#language-toggle-btn {
+    font-size: 1.1rem;
+}
+[data-theme='dark'] #language-toggle-btn {
+    color: #e9dbdb;
+}
 @media (prefers-color-scheme: dark) {
     :root {
         background-color: #333333;

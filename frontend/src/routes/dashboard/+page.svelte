@@ -1,7 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import favicon from "$lib/assets/favicon.svg";
-  import { messageControl } from "$lib/components/utils";
+  import { messageControl, toggleTheme } from "$lib/components/utils";
+  import { language } from "$lib/stores/language";
 
   let offsetWords = $state<string[]>([]);
   let story = $state<string>("");
@@ -131,6 +132,7 @@
     }
   };
   let { data } = $props();
+  $inspect("language", $language);
 
   $effect(() => {
     if (data?.userData) {
@@ -157,20 +159,6 @@
       goto("/");
     } else {
       alert("Logout failed: " + result.error);
-    }
-  };
-
-  const toggleTheme = async () => {
-    const themeIcon = document.getElementById("theme-icon");
-    const html = document.documentElement;
-    const isDark = html.getAttribute("data-theme") === "dark";
-
-    if (isDark) {
-      html.setAttribute("data-theme", "light");
-      if (themeIcon) themeIcon.className = "fas fa-sun has-text-warning";
-    } else {
-      html.setAttribute("data-theme", "dark");
-      if (themeIcon) themeIcon.className = "fas fa-moon";
     }
   };
 </script>
@@ -364,17 +352,29 @@
         2026 AILLA © All rights reserved
         <span>|</span>
 
-        <a href="/github" target="_blank" rel="noopener norefererrer">
+        <a
+          href="https://gitlab.gwdg.de/webdev/2026/ki-generierte-geschichten-zum-sprache-lernen.git"
+          target="_blank"
+          rel="noopener norefererrer"
+        >
           AILLA v0.0.1
         </a>
         <span>|</span>
 
-        <a href="/data-privacy" target="_blank" rel="noopener noreferrer">
+        <a
+          href={`/${$language}/data-privacy`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Data Privacy
         </a>
         <span>|</span>
 
-        <a href="/imprint" target="_blank" rel="noopener noreferrer">
+        <a
+          href={`/${$language}/imprint`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Imprint
         </a>
       </p>
