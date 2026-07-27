@@ -1,6 +1,14 @@
 <script>
   import { toggleTheme, toggleLanguage } from "./utils";
   import { language } from "$lib/stores/language";
+  import { theme } from "$lib/stores/theme";
+  import { onMount } from "svelte";
+
+  let mounted = $state(false);
+
+  onMount(() => {
+    mounted = true;
+  });
 </script>
 
 <nav class="navbar is-danger" aria-label="main navigation">
@@ -25,7 +33,10 @@
           id="language-toggle-btn"
           aria-label="toggle language"
           onclick={toggleLanguage}
-          >{$language === "en" ? "DE" : "EN"}
+        >
+          {#if mounted}
+            {$language === "en" ? "DE" : "EN"}
+          {/if}
         </button>
       </div>
 
@@ -36,9 +47,16 @@
           aria-label="toggle theme"
           onclick={toggleTheme}
         >
-          <span class="icon">
-            <i class="fas fa-sun has-text-warning" id="theme-icon"></i>
-          </span>
+          {#if mounted}
+            <span class="icon">
+              <i
+                class={$theme === "dark"
+                  ? "fas fa-moon"
+                  : "fas fa-sun has-text-warning"}
+                id="theme-icon"
+              ></i>
+            </span>
+          {/if}
         </button>
       </div>
     </div>
