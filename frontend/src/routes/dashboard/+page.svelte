@@ -6,7 +6,7 @@
     toggleTheme,
     toggleLanguage,
   } from "$lib/components/utils";
-  import { theme, language } from "$lib/stores/theme";
+  import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
 
   let mounted = $state(false);
@@ -127,7 +127,10 @@
       if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}`);
       }
-      successMessage = "Story successfully saved!";
+      successMessage =
+        $language === "en"
+          ? "Story is saved successfully!"
+          : "Geschichte wurde erfolgreich gespeichert!";
       messageControl(
         (text) => {
           successMessage = text;
@@ -142,7 +145,6 @@
     }
   };
   let { data } = $props();
-  $inspect("language", $language);
 
   $effect(() => {
     if (data?.userData) {
@@ -237,7 +239,7 @@
               <span class="icon">
                 <i class="fas fa-sign-out-alt"></i>
               </span>
-              <span>Logout</span>
+              <span>{$language === "en" ? "Logout" : "Abmelden"}</span>
             </button>
           </div>
         </div>
@@ -250,14 +252,27 @@
   <section id="dash-section" class="section">
     <div id="dash-container" class="container">
       <div id="dash-btns" class="buttons is-centered">
-        <button
-          id="story-generate-btn"
-          class="button is-link"
-          onclick={startLearn}
-          disabled={loading}
-        >
-          {loading ? "Generating..." : story ? "Next Story" : "Generate Story"}
-        </button>
+        {#if mounted}
+          <button
+            id="story-generate-btn"
+            class="button is-link"
+            onclick={startLearn}
+            disabled={loading}
+          >
+            {loading
+              ? $language === "en"
+                ? "Generating..."
+                : "Generiere..."
+              : story
+                ? $language === "en"
+                  ? "Next Story"
+                  : "Nächste Geschichte"
+                : $language === "en"
+                  ? "Generate Story"
+                  : "Generiere Geschichte"}
+          </button>
+        {/if}
+
         {#if story}
           <button
             id="save-story-btn"
@@ -266,7 +281,7 @@
               void storeData(offsetWords, story, data.userAuth?.id ?? "")}
             disabled={loading}
           >
-            Save
+            {$language === "en" ? "Save" : "Speichern"}
           </button>
           <button
             id="reset-btn"
@@ -276,7 +291,7 @@
             }}
             disabled={loading}
           >
-            Reset
+            {$language === "en" ? "Reset" : "Zurücksetzen"}
           </button>
         {/if}
       </div>
@@ -286,9 +301,7 @@
           <span id="story-save-icon" class="icon is-size-6 mr-2">
             <i class="fas fa-check-circle"></i>
           </span>
-          <span id="story-save-text" class="is-size-6">
-            Story is saved successfully!
-          </span>
+          <span id="story-save-text" class="is-size-6">{successMessage}</span>
           <button
             id="story-save-close-btn"
             class="delete"
@@ -329,7 +342,11 @@
         ></button>
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">Translation with example</p>
+            <p class="modal-card-title">
+              {$language === "en"
+                ? "Translation with example"
+                : "Übersetzung mit Beispiel"}
+            </p>
             <button
               class="delete"
               aria-label="close"

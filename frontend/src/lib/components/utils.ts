@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import {theme,language} from '$lib/stores/theme';
+import {theme,language} from '$lib/stores/items';
 import { goto } from '$app/navigation';
 
 let timer: ReturnType<typeof setTimeout>;

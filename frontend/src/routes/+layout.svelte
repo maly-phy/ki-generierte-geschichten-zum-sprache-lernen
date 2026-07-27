@@ -1,7 +1,7 @@
 <script>
   import "../app.css";
   import { page } from "$app/state";
-  import { theme, language } from "$lib/stores/theme";
+  import { theme, language } from "$lib/stores/items";
 
   let { children } = $props();
 
@@ -15,6 +15,7 @@
     } else {
       document.documentElement.lang = $language;
     }
+
     document.documentElement.setAttribute("data-theme", $theme);
   });
 </script>
