@@ -173,6 +173,36 @@
       alert("Logout failed: " + result.error);
     }
   };
+
+  const deleteAccount = async () => {
+    const userId = data.userAuth?.id;
+    if (!userId) {
+      alert("User ID not found. Cannot delete account.");
+      return;
+    }
+    const confirmed = confirm(
+      $language === "en"
+        ? "Are you sure you want to delete your account?"
+        : "Sind Sie sicher, dass Sie Ihr Konto löschen möchten?",
+    );
+    if (!confirmed) return;
+
+    const response = await fetch(`http://localhost:3000/api/user/${userId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const result = await response.json();
+    if (result.success) {
+      alert(
+        $language === "en"
+          ? "Account deleted successfully."
+          : "Konto erfolgreich gelöscht.",
+      );
+      goto("/");
+    } else {
+      alert("Account deletion failed: " + result.error);
+    }
+  };
 </script>
 
 <svelte:head>
@@ -234,8 +264,23 @@
       >
         <div class="navbar-link is-centered">{data.userAuth?.email ?? ""}</div>
         <div id="dropdown-menu" class="navbar-dropdown is-right is-boxed">
-          <div id="dropdown-items" class="navbar-item">
-            <button id="logout-btn" class="dropdown-items" onclick={logout}>
+          <div id="delete-account-dropdown" class="navbar-item">
+            <button
+              id="delete-account-btn"
+              class="delete-account-dropdown"
+              onclick={deleteAccount}
+            >
+              <span class="icon">
+                <i class="fas fa-user-slash"></i>
+              </span>
+              <span
+                >{$language === "en" ? "Delete Account" : "Konto löschen"}</span
+              >
+            </button>
+          </div>
+
+          <div id="logout-dropdown" class="navbar-item">
+            <button id="logout-btn" class="logout-dropdown" onclick={logout}>
               <span class="icon">
                 <i class="fas fa-sign-out-alt"></i>
               </span>

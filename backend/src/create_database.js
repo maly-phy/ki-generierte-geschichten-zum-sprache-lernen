@@ -204,3 +204,13 @@ export async function loginUser(email, password) {
 export async function resendVerification(email) {
     return await pb.collection(config.users.collection).requestVerification(email);
 }
+
+export async function deleteUser(userId) {
+    const records= await pb.collection(config.users_data.collection).getFullList({
+        filter: `user = "${userId}"`
+    })
+    for (const record of records) {
+        await pb.collection(config.users_data.collection).delete(record.id);
+    }
+    await pb.collection(config.users.collection).delete(userId);
+};
