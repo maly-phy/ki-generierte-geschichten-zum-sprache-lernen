@@ -38,8 +38,15 @@
 }
 #register-btn, #login-btn {
     width: 100%;
-    margin-top: 20px;
     display: block;
+}
+#register-btn, #login-btn {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+#privacy-check {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 #back-login-btn {
     width: 100%;
@@ -145,8 +152,8 @@
     padding: 0;
     font-size: 1.1rem;
 }
-[data-theme="dark"] #theme-toggle-btn {
-    color: #c4afc4;
+[data-theme="light"] #theme-toggle-btn {
+    color: #0974a1 /*rgb(212, 212, 230) #c4afc4;*/
 }
 [data-theme="dark"] #theme-toggle-btn:hover {
     background-color: inherit;
@@ -241,6 +248,10 @@
 }
 #language-toggle-btn {
     font-size: 1.1rem;
+    font-weight: 500;
+}
+[data-theme='light'] #language-toggle-btn {
+    color: #0974a1;
 }
 [data-theme='dark'] #language-toggle-btn {
     color: #e9dbdb;

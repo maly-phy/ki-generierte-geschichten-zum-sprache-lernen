@@ -50,8 +50,8 @@
             <span class="icon">
               <i
                 class={$theme === "dark"
-                  ? "fas fa-moon"
-                  : "fas fa-sun has-text-warning"}
+                  ? "fas fa-sun has-text-warning"
+                  : "fa-regular fa-moon"}
                 id="theme-icon"
               ></i>
             </span>

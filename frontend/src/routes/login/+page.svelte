@@ -1,7 +1,9 @@
 <script>
   import { goto } from "$app/navigation";
   import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
+  import Navbar from "$lib/components/websiteNavbar.svelte";
   import { messageControl } from "$lib/components/utils";
+  import { language } from "$lib/stores/items";
 
   let email = $state("");
   let password = $state("");
@@ -31,15 +33,22 @@
   }
 </script>
 
+<Navbar />
 <section id="login-section" class="section">
   <div id="login-container" class="container">
     <div class="field">
-      <label class="label" for="email">Email</label>
+      <label class="label" for="email"
+        >{$language === "en" ? "Email" : "E-Mail"}</label
+      >
       <input id="email" class="input" type="email" bind:value={email} />
     </div>
-    <PasswordVisibility label="Password" _id="password" bind:value={password} />
+    <PasswordVisibility
+      label={$language === "en" ? "Password" : "Passwort"}
+      _id="password"
+      bind:value={password}
+    />
     <button id="login-btn" class="button is-primary" onclick={login}>
-      Login
+      {$language === "en" ? "Login" : "Einloggen"}
     </button>
 
     {#if loginMessage}

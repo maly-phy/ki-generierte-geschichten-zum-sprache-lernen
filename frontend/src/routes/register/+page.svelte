@@ -1,7 +1,9 @@
 <script>
   import { goto } from "$app/navigation";
   import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
+  import Navbar from "$lib/components/websiteNavbar.svelte";
   import { messageControl } from "$lib/components/utils";
+  import { language } from "$lib/stores/items";
 
   let email = $state("");
   let password = $state("");
@@ -9,6 +11,7 @@
 
   let verifyMessage = $state("");
   let registerMessage = $state("");
+  let checked = $state(false);
 
   async function register() {
     const response = await fetch("http://localhost:3000/api/register", {
@@ -72,11 +75,16 @@
   }
 </script>
 
+<Navbar />
 <section id="register-section" class="section">
   <div id="register-container" class="container">
-    <h1 class="title">Create account</h1>
+    <h1 class="title">
+      {$language === "en" ? "Create account" : "Konto erstellen"}
+    </h1>
     <div class="field">
-      <label class="label" for="email">Email</label>
+      <label class="label" for="email"
+        >{$language === "en" ? "Email" : "E-Mail"}</label
+      >
       <div class="control">
         <input
           id="email"
@@ -88,20 +96,44 @@
       </div>
     </div>
 
-    <PasswordVisibility label="Password" _id="password" bind:value={password} />
     <PasswordVisibility
-      label="Confirm Password"
+      label={$language === "en" ? "Password" : "Passwort"}
+      _id="password"
+      bind:value={password}
+    />
+    <PasswordVisibility
+      label={$language === "en" ? "Confirm Password" : "Passwort bestätigen"}
       _id="passwordConfirm"
       bind:value={passwordConfirm}
     />
+    <div id="privacy-check" class="field">
+      <div class="control">
+        <label class="checkbox">
+          <input type="checkbox" required bind:checked />
+          {$language === "en" ? "I agree to the" : "Ich stimme der"}
+          <a
+            href={`/${$language}/data-privacy`}
+            target="_blank"
+            rel="noopener noreferrer"
+            >{$language === "en"
+              ? "data privacy policy"
+              : "Datenschutzrichtlinie"}</a
+          >
+        </label>
+      </div>
+    </div>
 
-    <button id="register-btn" class="button is-primary" onclick={register}
-      >Register</button
-    >
+    {#if checked}
+      <button id="register-btn" class="button is-primary" onclick={register}
+        >{$language === "en" ? "Register" : "Registrieren"}</button
+      >
+    {/if}
+
     <button
       id="back-login-btn"
       class="button is-secondary"
-      onclick={() => goto("/login")}>Back to Login</button
+      onclick={() => goto("/login")}
+      >{$language === "en" ? "Back to Login" : "Zurück zum Login"}</button
     >
     {#if registerMessage && registerMessage.includes("This email is already registered")}
       <button
