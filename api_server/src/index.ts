@@ -2,7 +2,7 @@
 import { Hono } from "hono"
 import { setCookie, deleteCookie, getCookie } from "hono/cookie";
 import {cors} from "hono/cors";
-import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase, deleteUser, refreshAuth} from "../../backend/src/create_database.js";
+import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase, deleteUser, resetPassword, updatePassword} from "../../backend/src/create_database.js";
 import {generateStory} from "../../backend/src/create_story.js";
 import dotenv from "dotenv";
 
@@ -145,6 +145,17 @@ app.delete("/api/user/:userId", async (c) => {
   } catch (err) {
     console.error(err);
     return c.json({success: false, error: err.message || "Failed to delete user"}, 500);
+  }
+});
+
+app.post('/api/reset-password', async (c) => {
+  const {email} = await c.req.json();
+  try {
+    await resetPassword(email);
+    return c.json({success: true});
+  } catch(err) {
+    console.error(err);
+    return c.json({success: false, error: err.message || "Failed to send reset password email"}, 500);
   }
 });
 

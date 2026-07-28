@@ -212,9 +212,6 @@ export async function resendVerification(email) {
 }
 
 export async function deleteUser(userId) {
-    // const {pb, config} = await getPocketBase();
-    // await pbAuth(pb);
-    // console.log("authStore:", pb.authStore.token, pb.authStore.record);
     const records= await pb.collection(config.users_data.collection).getFullList({
         filter: `user = "${userId}"`
     })
@@ -224,3 +221,11 @@ export async function deleteUser(userId) {
     await pb.collection(config.users.collection).delete(userId);
     pb.authStore.clear();
 };
+
+export async function resetPassword(email) {
+    return await pb.collection(config.users.collection).requestPasswordReset(email);
+};
+
+// export async function updatePassword(token, newPassword, passwordConfirm) {
+//     return await pb.collection(config.users.collection).confirmPasswordReset(token, newPassword, passwordConfirm);
+// };

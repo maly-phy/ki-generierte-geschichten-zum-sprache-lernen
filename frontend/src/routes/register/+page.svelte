@@ -36,7 +36,7 @@
           verifyMessage = text;
         },
         verifyMessage,
-        1000,
+        5000,
       );
     } else {
       verifyMessage = "";
@@ -52,9 +52,13 @@
       }
     }
     if (!registerMessage.includes("This email is already registered")) {
-      messageControl((text) => {
-        registerMessage = text;
-      }, registerMessage);
+      messageControl(
+        (text) => {
+          registerMessage = text;
+        },
+        registerMessage,
+        5000,
+      );
     }
   }
 
