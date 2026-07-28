@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
   import { goto, invalidateAll } from "$app/navigation";
   import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
   import Navbar from "$lib/components/websiteNavbar.svelte";
   import { messageControl } from "$lib/components/utils";
   import { language } from "$lib/stores/items";
-  import { preventDefault } from "svelte/legacy";
 
   let email = $state("");
   let password = $state("");
   let loginMessage = $state("");
   let resetMessage = $state("");
+  // let evt = $state<KeyboardEvent | null>(null);
 
   async function login() {
     const response = await fetch("http://localhost:3000/api/login", {
@@ -65,6 +65,12 @@
       );
     }
   }
+
+  async function handleKeydown(evt: KeyboardEvent) {
+    if (evt.key === "Enter") {
+      await login();
+    }
+  }
 </script>
 
 <Navbar />
@@ -74,12 +80,19 @@
       <label class="label" for="email"
         >{$language === "en" ? "Email" : "E-Mail"}</label
       >
-      <input id="email" class="input" type="email" bind:value={email} />
+      <input
+        id="email"
+        class="input"
+        type="email"
+        bind:value={email}
+        onkeydown={handleKeydown}
+      />
     </div>
     <PasswordVisibility
       label={$language === "en" ? "Password" : "Passwort"}
       _id="password"
       bind:value={password}
+      keyEvt={handleKeydown}
     />
     <a
       id="reset-password-link"

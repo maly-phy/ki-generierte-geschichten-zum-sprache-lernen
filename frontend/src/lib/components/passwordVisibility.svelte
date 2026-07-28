@@ -1,5 +1,10 @@
 <script>
-  let { value = $bindable(), label = "Password", _id = "password" } = $props();
+  let {
+    value = $bindable(),
+    label = "Password",
+    _id = "password",
+    keyEvt = null,
+  } = $props();
   let showPassword = $state(false);
 
   const togglePassword = () => {
@@ -16,6 +21,7 @@
       type={showPassword ? "text" : "password"}
       placeholder="1234@abc"
       bind:value
+      onkeydown={keyEvt}
     />
     <button
       type="button"

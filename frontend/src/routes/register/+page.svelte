@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { goto } from "$app/navigation";
   import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
   import Navbar from "$lib/components/websiteNavbar.svelte";
@@ -79,6 +79,12 @@
       verifyMessage = "";
     }
   }
+
+  async function handleKeydown(evt: KeyboardEvent) {
+    if (evt.key === "Enter") {
+      await register();
+    }
+  }
 </script>
 
 <Navbar />
@@ -98,6 +104,7 @@
           type="email"
           placeholder="john@example.com"
           bind:value={email}
+          onkeydown={handleKeydown}
         />
       </div>
     </div>
@@ -106,11 +113,13 @@
       label={$language === "en" ? "Password" : "Passwort"}
       _id="password"
       bind:value={password}
+      keyEvt={handleKeydown}
     />
     <PasswordVisibility
       label={$language === "en" ? "Confirm Password" : "Passwort bestätigen"}
       _id="passwordConfirm"
       bind:value={passwordConfirm}
+      keyEvt={handleKeydown}
     />
     <div id="privacy-check" class="field">
       <div class="control">

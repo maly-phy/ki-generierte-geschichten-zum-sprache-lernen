@@ -2,7 +2,7 @@
   import "../app.css";
   import { page } from "$app/state";
   import { theme, language } from "$lib/stores/items";
-  import favicon from "$lib/assets/logo2.png";
+  import favicon from "$lib/assets/favicon.png";
 
   let { children } = $props();
 
