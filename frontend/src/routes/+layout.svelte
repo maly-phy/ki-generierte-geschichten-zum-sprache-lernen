@@ -2,6 +2,7 @@
   import "../app.css";
   import { page } from "$app/state";
   import { theme, language } from "$lib/stores/items";
+  import favicon from "$lib/assets/favicon.png";
 
   let { children } = $props();
 
@@ -19,5 +20,9 @@
     document.documentElement.setAttribute("data-theme", $theme);
   });
 </script>
+
+<svelte:head>
+  <link rel="icon" href={favicon} />
+</svelte:head>
 
 {@render children()}

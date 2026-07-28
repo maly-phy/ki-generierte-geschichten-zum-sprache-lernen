@@ -51,9 +51,11 @@
           "This email is already registered, please login or resend the verification link or use a different email to register.";
       }
     }
-    messageControl((text) => {
-      registerMessage = text;
-    }, registerMessage);
+    if (!registerMessage.includes("This email is already registered")) {
+      messageControl((text) => {
+        registerMessage = text;
+      }, registerMessage);
+    }
   }
 
   async function verifyAccount() {

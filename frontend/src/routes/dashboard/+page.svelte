@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import favicon from "$lib/assets/favicon.svg";
+  import { goto, invalidateAll } from "$app/navigation";
   import {
     messageControl,
     toggleTheme,
@@ -8,7 +7,7 @@
   } from "$lib/components/utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
-  import logo from "$lib/assets/logo6.png";
+  import logo from "$lib/assets/logo.png";
 
   let mounted = $state(false);
   let offsetWords = $state<string[]>([]);
@@ -56,6 +55,7 @@
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
     loading = true;
+    console.log("user data:", data.userData);
     await storeData(selectedWords, story, data.userAuth?.id ?? "");
 
     try {
@@ -155,6 +155,7 @@
       story = data.userData.generated_story ?? "";
     }
   });
+  $inspect("data", data);
 
   const resetStory = async () => {
     offsetWords = [];
@@ -169,7 +170,9 @@
     });
     const result = await response.json();
     if (result.success) {
-      goto("/");
+      goto("/", {
+        invalidateAll: true,
+      });
     } else {
       alert("Logout failed: " + result.error);
     }
@@ -199,16 +202,14 @@
           ? "Account deleted successfully."
           : "Konto erfolgreich gelöscht.",
       );
-      goto("/");
+      goto("/", {
+        invalidateAll: true,
+      });
     } else {
       alert("Account deletion failed: " + result.error);
     }
   };
 </script>
-
-<svelte:head>
-  <link rel="icon" href={favicon} />
-</svelte:head>
 
 <nav class="navbar is-danger is-fixed-top" aria-label="main navigation">
   <div class="navbar-brand">

@@ -26,18 +26,6 @@ export async function getPocketBase(file="../../config.toml") {
 }
 const {pb, config} = await getPocketBase();
 
-async function mapRecords() {
-    let allRecords= null;
-    let map = null;
-    if (!allRecords || !map) {
-        allRecords= await pb.collection(config.pocketbase.collection).getFullList({});
-        map = new Map(
-            allRecords.map(r=> [r.german.toLowerCase(), r])
-        )
-    }
-    return {allRecords, map};
-};
-
 let authenticated = false;
 
 async function pbAuth(envPath="../.env") {
@@ -54,6 +42,22 @@ async function pbAuth(envPath="../.env") {
 
 if (!authenticated) {
     await pbAuth();
+};
+
+async function mapRecords() {
+    // console.log('authenticated:', authenticated);
+    // if (!authenticated) {
+    // };
+    await pbAuth();
+    let allRecords= null;
+    let map = null;
+    if (!allRecords || !map) {
+        allRecords= await pb.collection(config.pocketbase.collection).getFullList({});
+        map = new Map(
+            allRecords.map(r=> [r.german.toLowerCase(), r])
+        )
+    }
+    return {allRecords, map};
 };
 
 async function pbFill() {
@@ -198,7 +202,9 @@ export async function registerUser(email, password, passwordConfirm) {
 }
 
 export async function loginUser(email, password) {
-    return await pb.collection(config.users.collection).authWithPassword(email, password);
+    const authData= await pb.collection(config.users.collection).authWithPassword(email, password);
+    console.log("loginUser authStore:", pb.authStore.token, pb.authStore.record);
+    return authData;
 }
 
 export async function resendVerification(email) {
@@ -206,11 +212,24 @@ export async function resendVerification(email) {
 }
 
 export async function deleteUser(userId) {
-    const records= await pb.collection(config.users_data.collection).getFullList({
+    const {pb: adminPb, config: adminConfig} = await getPocketBase();
+    await adminPb.collection("_superusers").authWithPassword(
+        process.env.PB_EMAIL,
+        process.env.PB_PASSWORD,
+    );
+    console.log("authStore:", adminPb.authStore.token, adminPb.authStore.record);
+    const records= await adminPb.collection(adminConfig.users_data.collection).getFullList({
         filter: `user = "${userId}"`
     })
     for (const record of records) {
-        await pb.collection(config.users_data.collection).delete(record.id);
+        await adminPb.collection(adminConfig.users_data.collection).delete(record.id);
     }
-    await pb.collection(config.users.collection).delete(userId);
+    await adminPb.collection(adminConfig.users.collection).delete(userId);
+    adminPb.authStore.clear();
+};
+
+export async function refreshAuth() {
+    await pbAuth();
+    const freshData = await pb.collection(config.users.collection).authRefresh();
+    return freshData;
 };

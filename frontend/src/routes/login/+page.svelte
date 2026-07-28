@@ -1,5 +1,5 @@
 <script>
-  import { goto } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
   import PasswordVisibility from "$lib/components/passwordVisibility.svelte";
   import Navbar from "$lib/components/websiteNavbar.svelte";
   import { messageControl } from "$lib/components/utils";
@@ -24,7 +24,9 @@
     const result = await response.json();
 
     if (result.success) {
-      goto("/dashboard");
+      goto("/dashboard", {
+        invalidateAll: true,
+      });
       return;
     }
     messageControl((text) => {

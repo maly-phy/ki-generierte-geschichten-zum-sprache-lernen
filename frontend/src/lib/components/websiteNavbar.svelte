@@ -2,7 +2,7 @@
   import { toggleTheme, toggleLanguage } from "./utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
-  import logo from "$lib/assets/logo6.png";
+  import logo from "$lib/assets/logo.png";
 
   let mounted = $state(false);
 

@@ -1,8 +1,8 @@
 //@ts-nocheck
 import { Hono } from "hono"
-import { setCookie, deleteCookie } from "hono/cookie";
+import { setCookie, deleteCookie, getCookie } from "hono/cookie";
 import {cors} from "hono/cors";
-import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase, deleteUser} from "../../backend/src/create_database.js";
+import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase, deleteUser, refreshAuth} from "../../backend/src/create_database.js";
 import {generateStory} from "../../backend/src/create_story.js";
 import dotenv from "dotenv";
 
@@ -88,7 +88,6 @@ app.post("/api/login", async(c) => {
         path: "/",
         maxAge: 60 * 60 * 24, // 1 day
       });
-
       return c.json({
         success: true,
         token: authData.token,
@@ -125,11 +124,37 @@ app.post("/api/logout", async (c) => {
 app.delete("/api/user/:userId", async (c) => {
   const userId= c.req.param('userId');
   try {
+    const session = getCookie(c, "session");
+    if (!session) {
+      return c.json({success: false, error: "Not authenticated"}, 401);
+    }
+
+    const {pb, config} = await getPocketBase("../../config.toml");
+    pb.authStore.save(session);
+    const authData = await pb.collection(config.users.collection).authRefresh();
+
+    if (authData.record?.id !== userId) {
+      return c.json({success: false, error: "You can only delete your own account"}, 403);
+    }
+
     await deleteUser(userId);
+    deleteCookie(c, 'session', {
+        path: '/'
+      });
     return c.json({success: true});
   } catch (err) {
     console.error(err);
     return c.json({success: false, error: err.message || "Failed to delete user"}, 500);
+  }
+});
+
+app.post('/api/refresh-auth', async (c) => {
+  try {
+    await refreshAuth();
+    return c.json({success: true});
+  } catch (err) {
+    console.error(err);
+    return c.json({success: false, error: err.message || "Failed to refresh auth"}, 500);
   }
 });
 
