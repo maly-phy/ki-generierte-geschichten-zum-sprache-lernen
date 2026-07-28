@@ -28,7 +28,7 @@ const {pb, config} = await getPocketBase();
 
 let authenticated = false;
 
-async function pbAuth(envPath="../.env") {
+async function pbAuth(pb, envPath="../.env") {
     dotenv.config({
         path: path.resolve(envPath)
     });
@@ -37,18 +37,17 @@ async function pbAuth(envPath="../.env") {
     await pb.collection("_superusers").authWithPassword(
         email, password
         );
-        authenticated=true;
-};
-
+    };
+    
 if (!authenticated) {
-    await pbAuth();
+    await pbAuth(pb);
+    authenticated=true;
 };
+console.log('authenticated:', authenticated);
 
 async function mapRecords() {
-    // console.log('authenticated:', authenticated);
-    // if (!authenticated) {
-    // };
-    await pbAuth();
+    // await pbAuth(pb);
+
     let allRecords= null;
     let map = null;
     if (!allRecords || !map) {
@@ -203,7 +202,8 @@ export async function registerUser(email, password, passwordConfirm) {
 
 export async function loginUser(email, password) {
     const authData= await pb.collection(config.users.collection).authWithPassword(email, password);
-    console.log("loginUser authStore:", pb.authStore.token, pb.authStore.record);
+    await pbAuth(pb);
+    // console.log("loginUser authStore:", pb.authStore.token, pb.authStore.record);
     return authData;
 }
 
@@ -212,24 +212,15 @@ export async function resendVerification(email) {
 }
 
 export async function deleteUser(userId) {
-    const {pb: adminPb, config: adminConfig} = await getPocketBase();
-    await adminPb.collection("_superusers").authWithPassword(
-        process.env.PB_EMAIL,
-        process.env.PB_PASSWORD,
-    );
-    console.log("authStore:", adminPb.authStore.token, adminPb.authStore.record);
-    const records= await adminPb.collection(adminConfig.users_data.collection).getFullList({
+    // const {pb, config} = await getPocketBase();
+    // await pbAuth(pb);
+    // console.log("authStore:", pb.authStore.token, pb.authStore.record);
+    const records= await pb.collection(config.users_data.collection).getFullList({
         filter: `user = "${userId}"`
     })
     for (const record of records) {
-        await adminPb.collection(adminConfig.users_data.collection).delete(record.id);
+        await pb.collection(config.users_data.collection).delete(record.id);
     }
-    await adminPb.collection(adminConfig.users.collection).delete(userId);
-    adminPb.authStore.clear();
-};
-
-export async function refreshAuth() {
-    await pbAuth();
-    const freshData = await pb.collection(config.users.collection).authRefresh();
-    return freshData;
+    await pb.collection(config.users.collection).delete(userId);
+    pb.authStore.clear();
 };

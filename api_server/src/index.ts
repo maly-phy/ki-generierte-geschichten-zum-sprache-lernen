@@ -148,14 +148,5 @@ app.delete("/api/user/:userId", async (c) => {
   }
 });
 
-app.post('/api/refresh-auth', async (c) => {
-  try {
-    await refreshAuth();
-    return c.json({success: true});
-  } catch (err) {
-    console.error(err);
-    return c.json({success: false, error: err.message || "Failed to refresh auth"}, 500);
-  }
-});
 
 export default app
