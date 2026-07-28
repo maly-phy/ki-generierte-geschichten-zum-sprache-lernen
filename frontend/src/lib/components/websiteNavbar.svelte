@@ -2,6 +2,7 @@
   import { toggleTheme, toggleLanguage } from "./utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
+  import logo from "$lib/assets/logo6.png";
 
   let mounted = $state(false);
 
@@ -12,6 +13,9 @@
 
 <nav class="navbar is-danger" aria-label="main navigation">
   <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src={logo} alt="Logo" class="custom-logo" />
+    </a>
     <div
       role="button"
       class="navbar-burger"
@@ -19,6 +23,7 @@
       aria-expanded="false"
       data-target="web-navbarMenu"
     >
+      <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </div>

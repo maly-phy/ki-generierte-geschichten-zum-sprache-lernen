@@ -97,7 +97,7 @@
     gap: 80px;
 }
 .navbar {
-    padding: 0.2rem;
+    padding: 0.4rem 0.75rem;
 }
 #navbar-end {
     margin-right: 1rem;
@@ -190,6 +190,8 @@
     padding: 0.7rem;
     font-size: 1.1rem;
     font-weight: 500;
+    margin-top: 1.2rem;
+    margin-bottom: 1rem;
 }
 
 .footer {
@@ -250,7 +252,7 @@
     color: rgba(255, 255, 255, 0.7);
 }
 #web-navbarMenu {
-    padding-right: 1rem;
+    padding-right: 0.5rem;
 }
 #language-toggle-btn {
     font-size: 1.1rem;
@@ -261,6 +263,45 @@
 }
 [data-theme='dark'] #language-toggle-btn {
     color: #e9dbdb;
+}
+
+.custom-logo {
+    object-fit: contain;
+    display: block;
+    height: 55px !important;
+    width: auto;
+    max-height: none !important;
+}
+.navbar-brand .navbar-item:hover {
+    /* transform: scale(1.05);
+    transition: transform 0.2s ease-in-out; */
+    background-color: transparent;
+}
+/* .navbar-brand .navbar-item img {
+    cursor: none;
+} */
+.navbar-brand .navbar-item {
+    padding: 0.5rem 1rem;
+}
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar {
+    min-height: 55px;
+}
+
+.navbar-brand .navbar-item {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .custom-logo {
+        height: 34px;
+        max-width: 140px;
+    }
 }
 @media (prefers-color-scheme: dark) {
     :root {

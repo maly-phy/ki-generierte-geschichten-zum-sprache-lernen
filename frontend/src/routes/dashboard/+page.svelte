@@ -8,6 +8,7 @@
   } from "$lib/components/utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
+  import logo from "$lib/assets/logo6.png";
 
   let mounted = $state(false);
   let offsetWords = $state<string[]>([]);
@@ -211,6 +212,9 @@
 
 <nav class="navbar is-danger is-fixed-top" aria-label="main navigation">
   <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src={logo} alt="Logo" class="custom-logo" />
+    </a>
     <div
       role="button"
       class="navbar-burger"

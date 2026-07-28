@@ -2,7 +2,7 @@
 import { Hono } from "hono"
 import { setCookie, deleteCookie } from "hono/cookie";
 import {cors} from "hono/cors";
-import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase} from "../../backend/src/create_database.js";
+import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification, getPocketBase, deleteUser} from "../../backend/src/create_database.js";
 import {generateStory} from "../../backend/src/create_story.js";
 import dotenv from "dotenv";
 
@@ -119,6 +119,17 @@ app.post("/api/logout", async (c) => {
   } catch (err) {
     console.error(err);
     return c.json({success: false, error: err.message || "Failed to logout"}, 500);
+  }
+});
+
+app.delete("/api/user/:userId", async (c) => {
+  const userId= c.req.param('userId');
+  try {
+    await deleteUser(userId);
+    return c.json({success: true});
+  } catch (err) {
+    console.error(err);
+    return c.json({success: false, error: err.message || "Failed to delete user"}, 500);
   }
 });
 
