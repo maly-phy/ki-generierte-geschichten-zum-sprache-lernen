@@ -38,7 +38,7 @@
         }
       }
       goto("/dashboard", {
-        // invalidateAll: true,
+        invalidateAll: true,
       });
       return;
     }
@@ -102,6 +102,7 @@
           class="input"
           type="email"
           name="email"
+          placeholder="john@example.com"
           autocomplete="username"
           bind:value={email}
           onkeydown={handleKeydown}
@@ -128,13 +129,13 @@
       <button id="login-btn" type="submit" class="button is-primary">
         {$language === "en" ? "Login" : "Einloggen"}
       </button>
-
-      {#if loginMessage}
-        <p class="help is-danger is-size-6 mt-5">{loginMessage}</p>
-      {/if}
-      {#if resetMessage}
-        <p class="help is-info is-size-6 mt-5">{resetMessage}</p>
-      {/if}
     </form>
+
+    {#if loginMessage}
+      <p class="help is-danger is-size-6 mt-5">{loginMessage}</p>
+    {/if}
+    {#if resetMessage}
+      <p class="help is-info is-size-6 mt-5">{resetMessage}</p>
+    {/if}
   </div>
 </section>

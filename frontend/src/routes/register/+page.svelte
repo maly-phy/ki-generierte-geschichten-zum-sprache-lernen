@@ -52,15 +52,13 @@
           "This email is already registered, please login or resend the verification link or use a different email to register.";
       }
     }
-    if (!registerMessage.includes("This email is already registered")) {
-      messageControl(
-        (text) => {
-          registerMessage = text;
-        },
-        registerMessage,
-        1000,
-      );
-    }
+    messageControl(
+      (text) => {
+        registerMessage = text;
+      },
+      registerMessage,
+      5000,
+    );
   }
 
   async function verifyAccount() {
@@ -114,7 +112,6 @@
             placeholder="john@example.com"
             bind:value={email}
             onkeydown={handleKeydown}
-            required
           />
         </div>
       </div>

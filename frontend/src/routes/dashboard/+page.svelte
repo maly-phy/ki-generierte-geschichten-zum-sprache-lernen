@@ -55,7 +55,6 @@
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
     loading = true;
-    console.log("user data:", data.userData);
     await storeData(selectedWords, story, data.userAuth?.id ?? "");
 
     try {
