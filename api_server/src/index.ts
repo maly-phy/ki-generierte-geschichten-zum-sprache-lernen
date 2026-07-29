@@ -6,12 +6,27 @@ import {pbFetch, pbFetchTranslation, registerUser, loginUser, resendVerification
 import {generateStory} from "../../backend/src/create_story.js";
 import dotenv from "dotenv";
 
-const app = new Hono()
+// // for production (domain)
+// import { secureHeaders } from "hono/secure-headers"; // in production
+// const allowedOrigins= ["https:/domain.com", "https://www.domain.com"];
+// app.use(
+//   "*",
+//   cors({
+//     origin: (origin) => {
+//       if (!origin) return '';
+//       return allowedOrigins.includes(origin) ? origin : '';
+//     },
+//     credentials: true
+//   }),
+//   secureHeaders()
+// );
 
+const app = new Hono()
 app.use(
   "*", 
   cors({origin: "http://localhost:5173", credentials: true}),
 ); // only during Dev
+
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
