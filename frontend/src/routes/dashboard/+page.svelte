@@ -4,6 +4,7 @@
     messageControl,
     toggleTheme,
     toggleLanguage,
+    clickOutside,
   } from "$lib/components/utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
@@ -18,6 +19,7 @@
   let successMessage = $state("");
   let menuOpen = $state(false);
   let mobileMenuOpen = $state(false);
+  let navbar: HTMLElement;
 
   let translation = $state<{
     english: string;
@@ -59,17 +61,6 @@
 
   onMount(() => {
     mounted = true;
-
-    const handleDocumentClick = () => {
-      mobileMenuOpen = false;
-      menuOpen = false;
-    };
-
-    document.addEventListener("click", handleDocumentClick);
-
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
   });
 
   const startLearn = async () => {
@@ -236,9 +227,14 @@
   }
 </script>
 
+<!-- @ts-ignore @ts-nocheck -->
 <svelte:document onkeydown={handleKeydown} />
 
-<nav class="navbar is-danger is-fixed-top" aria-label="main navigation">
+<nav
+  use:clickOutside={closeMobileMenu}
+  class="navbar is-danger is-fixed-top"
+  aria-label="main navigation"
+>
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
       <img src={logo} alt="Logo" class="custom-logo" />
@@ -247,8 +243,7 @@
       class="navbar-burger {mobileMenuOpen ? 'is-active' : ''}"
       aria-label="menu"
       aria-expanded={mobileMenuOpen}
-      onclick={(event) => {
-        event.stopPropagation();
+      onclick={() => {
         mobileMenuOpen = !mobileMenuOpen;
       }}
       data-target="navbarMenu"
@@ -270,7 +265,7 @@
           id="language-toggle-btn"
           aria-label="toggle language"
           onclick={() => {
-            closeMobileMenu();
+            // closeMobileMenu();
             toggleLanguage();
           }}
         >
@@ -286,7 +281,7 @@
           id="theme-toggle-btn"
           aria-label="toggle theme"
           onclick={() => {
-            closeMobileMenu();
+            // closeMobileMenu();
             toggleTheme();
           }}
         >
@@ -311,8 +306,7 @@
       >
         <button
           class="navbar-link is-centered"
-          onclick={(event) => {
-            event.stopPropagation();
+          onclick={() => {
             menuOpen = !menuOpen;
           }}
         >
@@ -324,7 +318,7 @@
               id="delete-account-btn"
               class="delete-account-dropdown"
               onclick={() => {
-                closeMobileMenu();
+                // closeMobileMenu();
                 void deleteAccount();
               }}
             >
@@ -342,7 +336,7 @@
               id="logout-btn"
               class="logout-dropdown"
               onclick={() => {
-                closeMobileMenu();
+                // closeMobileMenu();
                 void logout();
               }}
             >

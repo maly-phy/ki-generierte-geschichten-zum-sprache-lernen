@@ -1,6 +1,7 @@
 import { get } from 'svelte/store';
 import {theme,language} from '$lib/stores/items';
 import { goto } from '$app/navigation';
+import type {Action} from 'svelte/action';
 
 let timer: ReturnType<typeof setTimeout>;
 
@@ -26,3 +27,45 @@ export async function toggleLanguage() {
     await goto(newPath);
   }
 }
+
+// export const clickOutside: Action<HTMLElement, undefined> {
+//   onclickOutside: CustomEvent<void>
+// }
+// >= (node) => {
+//   const handleClick = (event: MouseEvent) => {
+//     if (!node.contains(event.target as Node)) {
+//       Node.dispatchEvent(new CustomEvent('clickoutside'))
+//   }
+// };
+
+//   document.addEventListener("click", handleClick, true);
+
+//   return {
+//     destroy() {
+//       document.removeEventListener("click", handleClick, true);
+//     },
+//   };
+// }
+
+
+export const clickOutside: Action<
+  HTMLElement,
+  () => void
+> = (node, callback) => {
+  const handleClick = (event: MouseEvent) => {
+    if (!node.contains(event.target as Node)) {
+      callback?.();
+    }
+  };
+
+  document.addEventListener("click", handleClick, true);
+
+  return {
+    update(newCallback) {
+      callback = newCallback;
+    },
+    destroy() {
+      document.removeEventListener("click", handleClick, true);
+    }
+  };
+};
