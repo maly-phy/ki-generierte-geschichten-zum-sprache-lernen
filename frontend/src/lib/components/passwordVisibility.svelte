@@ -19,7 +19,9 @@
       id={_id}
       class="input"
       type={showPassword ? "text" : "password"}
+      name="password"
       placeholder="1234@abc"
+      autocomplete="current-password"
       bind:value
       onkeydown={keyEvt}
     />

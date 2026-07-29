@@ -4,6 +4,7 @@
   import Navbar from "$lib/components/websiteNavbar.svelte";
   import { messageControl } from "$lib/components/utils";
   import { language } from "$lib/stores/items";
+  import { preventDefault } from "svelte/legacy";
 
   let email = $state("");
   let password = $state("");
@@ -57,7 +58,7 @@
           registerMessage = text;
         },
         registerMessage,
-        5000,
+        1000,
       );
     }
   }
@@ -81,7 +82,7 @@
   }
 
   async function handleKeydown(evt: KeyboardEvent) {
-    if (evt.key === "Enter") {
+    if (evt.key === "Enter" && checked) {
       await register();
     }
   }
@@ -93,56 +94,66 @@
     <h1 class="title">
       {$language === "en" ? "Create account" : "Konto erstellen"}
     </h1>
-    <div class="field">
-      <label class="label" for="email"
-        >{$language === "en" ? "Email" : "E-Mail"}</label
-      >
-      <div class="control">
-        <input
-          id="email"
-          class="input"
-          type="email"
-          placeholder="john@example.com"
-          bind:value={email}
-          onkeydown={handleKeydown}
-        />
+    <form
+      onsubmit={async (e) => {
+        e.preventDefault();
+        if (checked) await register();
+      }}
+    >
+      <div class="field">
+        <label class="label" for="email"
+          >{$language === "en" ? "Email" : "E-Mail"}</label
+        >
+        <div class="control">
+          <input
+            id="email"
+            class="input"
+            type="email"
+            name="email"
+            autocomplete="username"
+            placeholder="john@example.com"
+            bind:value={email}
+            onkeydown={handleKeydown}
+            required
+          />
+        </div>
       </div>
-    </div>
 
-    <PasswordVisibility
-      label={$language === "en" ? "Password" : "Passwort"}
-      _id="password"
-      bind:value={password}
-      keyEvt={handleKeydown}
-    />
-    <PasswordVisibility
-      label={$language === "en" ? "Confirm Password" : "Passwort bestätigen"}
-      _id="passwordConfirm"
-      bind:value={passwordConfirm}
-      keyEvt={handleKeydown}
-    />
-    <div id="privacy-check" class="field">
-      <div class="control">
-        <label class="checkbox">
-          <input type="checkbox" required bind:checked />
-          {$language === "en" ? "I agree to the" : "Ich stimme der"}
-          <a
-            href={`/${$language}/data-privacy`}
-            target="_blank"
-            rel="noopener noreferrer"
-            >{$language === "en"
-              ? "data privacy policy"
-              : "Datenschutzrichtlinie"}</a
-          >
-        </label>
+      <PasswordVisibility
+        label={$language === "en" ? "Password" : "Passwort"}
+        _id="password"
+        bind:value={password}
+        keyEvt={handleKeydown}
+      />
+      <PasswordVisibility
+        label={$language === "en" ? "Confirm Password" : "Passwort bestätigen"}
+        _id="passwordConfirm"
+        bind:value={passwordConfirm}
+        keyEvt={handleKeydown}
+      />
+      <div id="privacy-check" class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" bind:checked required />
+            {$language === "en" ? "I agree to the" : "Ich stimme der"}
+            <a
+              href={`/${$language}/data-privacy`}
+              target="_blank"
+              rel="noopener noreferrer"
+              >{$language === "en"
+                ? "data privacy policy"
+                : "Datenschutzrichtlinie"}</a
+            >
+          </label>
+        </div>
       </div>
-    </div>
 
-    {#if checked}
-      <button id="register-btn" class="button is-primary" onclick={register}
-        >{$language === "en" ? "Register" : "Registrieren"}</button
-      >
-    {/if}
+      {#if checked}
+        <button id="register-btn" class="button is-primary" type="submit"
+          >{$language === "en" ? "Register" : "Registrieren"}</button
+        >
+      {/if}
+    </form>
 
     <button
       id="back-login-btn"

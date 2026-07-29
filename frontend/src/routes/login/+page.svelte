@@ -9,7 +9,6 @@
   let password = $state("");
   let loginMessage = $state("");
   let resetMessage = $state("");
-  // let evt = $state<KeyboardEvent | null>(null);
 
   async function login() {
     const response = await fetch("http://localhost:3000/api/login", {
@@ -26,8 +25,20 @@
     const result = await response.json();
 
     if (result.success) {
+      if ("PasswordCredential" in window) {
+        try {
+          const PasswordCredentialCtor = (window as any).PasswordCredential;
+          const cred = new PasswordCredentialCtor({
+            id: email,
+            password: password,
+          });
+          await navigator.credentials.store(cred);
+        } catch (err) {
+          console.error("Error storing credentials:", err);
+        }
+      }
       goto("/dashboard", {
-        invalidateAll: true,
+        // invalidateAll: true,
       });
       return;
     }
@@ -76,44 +87,54 @@
 <Navbar />
 <section id="login-section" class="section">
   <div id="login-container" class="container">
-    <div class="field">
-      <label class="label" for="email"
-        >{$language === "en" ? "Email" : "E-Mail"}</label
-      >
-      <input
-        id="email"
-        class="input"
-        type="email"
-        bind:value={email}
-        onkeydown={handleKeydown}
-      />
-    </div>
-    <PasswordVisibility
-      label={$language === "en" ? "Password" : "Passwort"}
-      _id="password"
-      bind:value={password}
-      keyEvt={handleKeydown}
-    />
-    <a
-      id="reset-password-link"
-      href="#"
-      class="has-text-link has-text-right"
-      onclick={(e) => {
+    <form
+      onsubmit={async (e) => {
         e.preventDefault();
-        resetPassword();
+        await login();
       }}
     >
-      {$language === "en" ? "Forgot Password?" : "Passwort vergessen?"}
-    </a>
-    <button id="login-btn" class="button is-primary" onclick={login}>
-      {$language === "en" ? "Login" : "Einloggen"}
-    </button>
+      <div class="field">
+        <label class="label" for="email"
+          >{$language === "en" ? "Email" : "E-Mail"}</label
+        >
+        <input
+          id="email"
+          class="input"
+          type="email"
+          name="email"
+          autocomplete="username"
+          bind:value={email}
+          onkeydown={handleKeydown}
+        />
+      </div>
 
-    {#if loginMessage}
-      <p class="help is-danger is-size-6 mt-5">{loginMessage}</p>
-    {/if}
-    {#if resetMessage}
-      <p class="help is-info is-size-6 mt-5">{resetMessage}</p>
-    {/if}
+      <PasswordVisibility
+        label={$language === "en" ? "Password" : "Passwort"}
+        _id="password"
+        bind:value={password}
+        keyEvt={handleKeydown}
+      />
+      <a
+        id="reset-password-link"
+        href="#"
+        class="has-text-link has-text-right"
+        onclick={(e) => {
+          e.preventDefault();
+          resetPassword();
+        }}
+      >
+        {$language === "en" ? "Forgot Password?" : "Passwort vergessen?"}
+      </a>
+      <button id="login-btn" type="submit" class="button is-primary">
+        {$language === "en" ? "Login" : "Einloggen"}
+      </button>
+
+      {#if loginMessage}
+        <p class="help is-danger is-size-6 mt-5">{loginMessage}</p>
+      {/if}
+      {#if resetMessage}
+        <p class="help is-info is-size-6 mt-5">{resetMessage}</p>
+      {/if}
+    </form>
   </div>
 </section>

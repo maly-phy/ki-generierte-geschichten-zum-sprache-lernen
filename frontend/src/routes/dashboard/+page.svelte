@@ -155,7 +155,7 @@
       story = data.userData.generated_story ?? "";
     }
   });
-  $inspect("data", data);
+  // $inspect("data", data);
 
   const resetStory = async () => {
     offsetWords = [];
