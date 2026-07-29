@@ -1,6 +1,6 @@
 @import "bulma/css/bulma.min.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
-    
+
 .selected {
     background: #70d870;
     color: white;
@@ -226,11 +226,10 @@
 }
 #privacy-content,
 #imprint-content {
-    padding-top: 3rem;
-    padding-bottom: 4rem;
-    padding-left: 4rem;
-    padding-right: 4rem;
-    line-height: 1.6;
+    /* padding-top: 3rem; */
+    padding-bottom: 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     text-align: justify;
     flex: 1;
 }
@@ -240,7 +239,7 @@
     font-size: 1.1rem;
     color: rgba(0, 0, 0, 1);
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.8;
 }
 #privacy-content a:hover,
 #imprint-content a:hover,
@@ -314,6 +313,20 @@
 #reset-password-link:hover {
     text-decoration: underline;
 }
+
+/* [data-theme='light'] .register-section,
+[data-theme='light'] .login-section,
+[data-theme='light'] .section {
+    background-color: #f4f6f9 !important;
+}
+[data-theme='light'] #story-card {
+    background-color: #eceef1 !important; /*#d8e1f0
+}  */
+
+
+/* @media screen and (max-width: 1050px) {
+    .navbar-menu
+} */
 
 @media (max-width: 768px) {
     .custom-logo {

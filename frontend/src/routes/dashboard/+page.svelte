@@ -8,12 +8,16 @@
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
   import logo from "$lib/assets/logo.png";
+  // import { on } from "svelte/events";
+  // import { handle } from "../../hooks.server.js";
 
   let mounted = $state(false);
   let offsetWords = $state<string[]>([]);
   let story = $state<string>("");
   let loading = $state(false);
   let successMessage = $state("");
+  let menuOpen = $state(false);
+  let mobileMenuOpen = $state(false);
 
   let translation = $state<{
     english: string;
@@ -48,8 +52,24 @@
     isTranslationModalOpen = false;
   };
 
+  const closeMobileMenu = () => {
+    mobileMenuOpen = false;
+    menuOpen = false;
+  };
+
   onMount(() => {
     mounted = true;
+
+    const handleDocumentClick = () => {
+      mobileMenuOpen = false;
+      menuOpen = false;
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
   });
 
   const startLearn = async () => {
@@ -208,33 +228,51 @@
       alert("Account deletion failed: " + result.error);
     }
   };
+  function handleKeydown(evt: KeyboardEvent) {
+    if (evt.key === "Enter" || evt.key === "Escape") {
+      mobileMenuOpen = false;
+      menuOpen = false;
+    }
+  }
 </script>
+
+<svelte:document onkeydown={handleKeydown} />
 
 <nav class="navbar is-danger is-fixed-top" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
       <img src={logo} alt="Logo" class="custom-logo" />
     </a>
-    <div
-      role="button"
-      class="navbar-burger"
+    <button
+      class="navbar-burger {mobileMenuOpen ? 'is-active' : ''}"
       aria-label="menu"
-      aria-expanded="false"
+      aria-expanded={mobileMenuOpen}
+      onclick={(event) => {
+        event.stopPropagation();
+        mobileMenuOpen = !mobileMenuOpen;
+      }}
       data-target="navbarMenu"
     >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
-    </div>
+      <span aria-hidden="true"></span>
+    </button>
   </div>
 
-  <div id="navbarMenu" class="navbar-menu is-centered">
+  <div
+    id="navbarMenu"
+    class="navbar-menu is-centered {mobileMenuOpen ? 'is-active' : ''}"
+  >
     <div id="navbar-end" class="navbar-end">
       <div class="navbar-item is-centered">
         <button
           type="button"
           id="language-toggle-btn"
           aria-label="toggle language"
-          onclick={toggleLanguage}
+          onclick={() => {
+            closeMobileMenu();
+            toggleLanguage();
+          }}
         >
           {#if mounted}
             {$language === "en" ? "DE" : "EN"}
@@ -247,7 +285,10 @@
           type="button"
           id="theme-toggle-btn"
           aria-label="toggle theme"
-          onclick={toggleTheme}
+          onclick={() => {
+            closeMobileMenu();
+            toggleTheme();
+          }}
         >
           {#if mounted}
             <span class="icon">
@@ -264,15 +305,28 @@
 
       <div
         id="dropdown-arrow"
-        class="navbar-item has-dropdown is-hoverable is-centered"
+        class="navbar-item has-dropdown is-centered {menuOpen
+          ? 'is-active'
+          : ''}"
       >
-        <div class="navbar-link is-centered">{data.userAuth?.email ?? ""}</div>
+        <button
+          class="navbar-link is-centered"
+          onclick={(event) => {
+            event.stopPropagation();
+            menuOpen = !menuOpen;
+          }}
+        >
+          {data.userAuth?.email ?? ""}
+        </button>
         <div id="dropdown-menu" class="navbar-dropdown is-right is-boxed">
           <div id="delete-account-dropdown" class="navbar-item">
             <button
               id="delete-account-btn"
               class="delete-account-dropdown"
-              onclick={deleteAccount}
+              onclick={() => {
+                closeMobileMenu();
+                void deleteAccount();
+              }}
             >
               <span class="icon">
                 <i class="fas fa-user-slash"></i>
@@ -284,7 +338,14 @@
           </div>
 
           <div id="logout-dropdown" class="navbar-item">
-            <button id="logout-btn" class="logout-dropdown" onclick={logout}>
+            <button
+              id="logout-btn"
+              class="logout-dropdown"
+              onclick={() => {
+                closeMobileMenu();
+                void logout();
+              }}
+            >
               <span class="icon">
                 <i class="fas fa-sign-out-alt"></i>
               </span>
@@ -363,7 +424,7 @@
       {/if}
 
       {#if story}
-        <div class="notification">
+        <div id="story-card" class="notification">
           <p>
             {#each story.split(/(\s+)/) as token}
               {#if token.trim() === ""}
