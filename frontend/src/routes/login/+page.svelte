@@ -106,6 +106,7 @@
           autocomplete="username"
           bind:value={email}
           onkeydown={handleKeydown}
+          required
         />
       </div>
 

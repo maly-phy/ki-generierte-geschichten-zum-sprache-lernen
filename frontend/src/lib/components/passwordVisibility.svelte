@@ -24,6 +24,7 @@
       autocomplete="current-password"
       bind:value
       onkeydown={keyEvt}
+      required
     />
     <button
       type="button"

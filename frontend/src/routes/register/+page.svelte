@@ -112,6 +112,7 @@
             placeholder="john@example.com"
             bind:value={email}
             onkeydown={handleKeydown}
+            required
           />
         </div>
       </div>
