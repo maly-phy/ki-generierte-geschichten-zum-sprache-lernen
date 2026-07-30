@@ -28,26 +28,6 @@ export async function toggleLanguage() {
   }
 }
 
-// export const clickOutside: Action<HTMLElement, undefined> {
-//   onclickOutside: CustomEvent<void>
-// }
-// >= (node) => {
-//   const handleClick = (event: MouseEvent) => {
-//     if (!node.contains(event.target as Node)) {
-//       Node.dispatchEvent(new CustomEvent('clickoutside'))
-//   }
-// };
-
-//   document.addEventListener("click", handleClick, true);
-
-//   return {
-//     destroy() {
-//       document.removeEventListener("click", handleClick, true);
-//     },
-//   };
-// }
-
-
 export const clickOutside: Action<
   HTMLElement,
   () => void

@@ -314,19 +314,15 @@
     text-decoration: underline;
 }
 
-/* [data-theme='light'] .register-section,
+[data-theme='light'] .register-section,
 [data-theme='light'] .login-section,
 [data-theme='light'] .section {
     background-color: #f4f6f9 !important;
 }
 [data-theme='light'] #story-card {
-    background-color: #eceef1 !important; /*#d8e1f0
-}  */
+    background-color: #eceef1 !important; /*#d8e1f0*/
+} 
 
-
-/* @media screen and (max-width: 1050px) {
-    .navbar-menu
-} */
 
 @media (max-width: 768px) {
     .custom-logo {
@@ -344,4 +340,42 @@
         background-color: #333333;
         color: #ffffff;
     }
+}
+
+@media screen and (max-width: 1023px) {
+    .navbar-item.has-dropdown .navbar-dropdown {
+        display: none;
+    }
+    .navbar-item.has-dropdown.is-active .navbar-dropdown {
+        display: block;
+    }
+    [data-theme= 'dark'] .navbar-menu {
+        background-color: inherit;
+    }
+    .navbar-item {
+        min-width: max-content !important;
+        max-width: 60% !important;
+    }
+    [data-theme='dark'] .navbar-item {
+        min-width: max-content !important;
+        max-width: 30% !important;
+    }
+    
+    /* .navbar-item.navbar-item.has-dropdown { */
+        /* position: relative; */
+    /* } */
+    /* .navbar-item.has-dropdown .navbar-dropdown { */
+        /* position: absolute; */
+        /* top: 100%; */
+        /* right: 0; */
+        /* left: auto; */
+        /* z-index: 1000; */
+        /* min-width: 220px; */
+    /* } */
+/*  */
+    /* .navbar-item.navbar-item.has-dropdown .navbar-dropdown { */
+        /* right: 0.5rem; */
+        /* left: auto; */
+    /* } */
+
 }

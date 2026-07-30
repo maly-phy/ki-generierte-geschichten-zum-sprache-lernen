@@ -55,7 +55,7 @@
   };
 
   const closeMobileMenu = () => {
-    mobileMenuOpen = false;
+    mobileMenuOpen = false; // can be deleted, not needed
     menuOpen = false;
   };
 
@@ -220,7 +220,7 @@
     }
   };
   function handleKeydown(evt: KeyboardEvent) {
-    if (evt.key === "Enter" || evt.key === "Escape") {
+    if (evt.key === " " || evt.key === "Escape") {
       mobileMenuOpen = false;
       menuOpen = false;
     }
