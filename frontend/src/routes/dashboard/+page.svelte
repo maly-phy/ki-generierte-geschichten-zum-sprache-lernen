@@ -220,7 +220,7 @@
     }
   };
   function handleKeydown(evt: KeyboardEvent) {
-    if (evt.key === " " || evt.key === "Escape") {
+    if (evt.key === "Enter" || evt.key === "Escape") {
       mobileMenuOpen = false;
       menuOpen = false;
     }
