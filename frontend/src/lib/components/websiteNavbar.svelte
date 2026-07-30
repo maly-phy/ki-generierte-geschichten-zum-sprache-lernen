@@ -1,35 +1,50 @@
 <script>
-  import { toggleTheme, toggleLanguage } from "./utils";
+  import { toggleTheme, toggleLanguage, clickOutside } from "./utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
   import logo from "$lib/assets/logo.png";
 
   let mounted = $state(false);
+  let mobileMenuOpen = $state(false);
 
   onMount(() => {
     mounted = true;
   });
+
+  function closeMobileMenu() {
+    mobileMenuOpen = false;
+  }
 </script>
 
-<nav class="navbar is-danger" aria-label="main navigation">
+<nav
+  use:clickOutside={closeMobileMenu}
+  class="navbar is-danger"
+  aria-label="main navigation"
+>
   <div class="navbar-brand">
     <a class="navbar-item" href="/">
       <img src={logo} alt="Logo" class="custom-logo" />
     </a>
-    <div
+    <button
       role="button"
-      class="navbar-burger"
+      class="navbar-burger {mobileMenuOpen ? 'is-active' : ''}"
       aria-label="menu"
-      aria-expanded="false"
+      aria-expanded={mobileMenuOpen}
+      onclick={() => {
+        mobileMenuOpen = !mobileMenuOpen;
+      }}
       data-target="web-navbarMenu"
     >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
-    </div>
+    </button>
   </div>
 
-  <div id="web-navbarMenu" class="navbar-menu is-centered">
+  <div
+    id="web-navbarMenu"
+    class="navbar-menu is-centered {mobileMenuOpen ? 'is-active' : ''}"
+  >
     <div id="navbar-end" class="navbar-end">
       <div class="navbar-item is-centered">
         <button

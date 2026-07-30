@@ -49,16 +49,18 @@
         registerMessage = "Password must be at least 8 characters long.";
       } else {
         registerMessage =
-          "This email is already registered, please login or resend the verification link or use a different email to register.";
+          "This email is already registered, please login directly or resend a verification link, if not already verified or use a different email to register.";
       }
     }
-    messageControl(
-      (text) => {
-        registerMessage = text;
-      },
-      registerMessage,
-      5000,
-    );
+    if (registerMessage && !registerMessage.includes("already registered")) {
+      messageControl(
+        (text) => {
+          registerMessage = text;
+        },
+        registerMessage,
+        5000,
+      );
+    }
   }
 
   async function verifyAccount() {

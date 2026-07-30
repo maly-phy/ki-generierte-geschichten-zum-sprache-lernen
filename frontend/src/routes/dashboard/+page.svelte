@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto, invalidateAll } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import {
     messageControl,
     toggleTheme,
@@ -9,8 +9,6 @@
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
   import logo from "$lib/assets/logo.png";
-  // import { on } from "svelte/events";
-  // import { handle } from "../../hooks.server.js";
 
   let mounted = $state(false);
   let offsetWords = $state<string[]>([]);
@@ -19,7 +17,6 @@
   let successMessage = $state("");
   let menuOpen = $state(false);
   let mobileMenuOpen = $state(false);
-  let navbar: HTMLElement;
 
   let translation = $state<{
     english: string;
@@ -54,14 +51,21 @@
     isTranslationModalOpen = false;
   };
 
-  const closeMobileMenu = () => {
-    mobileMenuOpen = false; // can be deleted, not needed
-    menuOpen = false;
-  };
-
   onMount(() => {
     mounted = true;
   });
+
+  function handleKeydown(evt: KeyboardEvent) {
+    if (evt.key === " " || evt.key === "Escape") {
+      mobileMenuOpen = false;
+      menuOpen = false;
+    }
+  }
+
+  function closeMobileMenu() {
+    mobileMenuOpen = false;
+    menuOpen = false;
+  }
 
   const startLearn = async () => {
     const selectedWords = [...offsetWords];
@@ -173,7 +177,7 @@
     successMessage = "";
   };
 
-  const logout = async () => {
+  export const logout = async () => {
     const response = await fetch("http://localhost:3000/api/logout", {
       method: "POST",
       credentials: "include",
@@ -188,7 +192,7 @@
     }
   };
 
-  const deleteAccount = async () => {
+  export const deleteAccount = async () => {
     const userId = data.userAuth?.id;
     if (!userId) {
       alert("User ID not found. Cannot delete account.");
@@ -219,12 +223,6 @@
       alert("Account deletion failed: " + result.error);
     }
   };
-  function handleKeydown(evt: KeyboardEvent) {
-    if (evt.key === "Enter" || evt.key === "Escape") {
-      mobileMenuOpen = false;
-      menuOpen = false;
-    }
-  }
 </script>
 
 <!-- @ts-ignore @ts-nocheck -->
