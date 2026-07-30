@@ -151,7 +151,7 @@
           successMessage = text;
         },
         successMessage,
-        3000,
+        5000,
       );
     } catch (error) {
       console.error(
@@ -169,7 +169,6 @@
       story = data.userData.generated_story ?? "";
     }
   });
-  // $inspect("data", data);
 
   const resetStory = async () => {
     offsetWords = [];
@@ -223,6 +222,7 @@
       alert("Account deletion failed: " + result.error);
     }
   };
+  $inspect("lang", mounted ? document.documentElement.lang : null);
 </script>
 
 <!-- @ts-ignore @ts-nocheck -->
@@ -230,7 +230,7 @@
 
 <nav
   use:clickOutside={closeMobileMenu}
-  class="navbar is-danger is-fixed-top"
+  class="navbar is-danger"
   aria-label="main navigation"
 >
   <div class="navbar-brand">

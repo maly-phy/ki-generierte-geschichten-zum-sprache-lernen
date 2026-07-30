@@ -1,6 +1,8 @@
 <script>
 	const theme= localStorage.getItem('theme') ?? 'light';
 	document.documentElement.setAttribute('data-theme', theme);
+	const language= localStorage.getItem('language') ?? 'en';
+	document.documentElement.lang= language;
 </script>
 
 <!DOCTYPE html>
