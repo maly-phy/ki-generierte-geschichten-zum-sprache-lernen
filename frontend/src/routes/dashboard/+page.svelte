@@ -528,6 +528,15 @@
         >
           {$language === "en" ? "Imprint" : "Impressum"}
         </a>
+        <span>|</span>
+
+        <a
+          href={`/${$language}/accessibility`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {$language === "en" ? "Accessibility" : "Barrierefreiheit"}
+        </a>
       </p>
     </div>
   </footer>

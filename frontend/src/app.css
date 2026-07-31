@@ -247,7 +247,8 @@ body {
     color:#e9dbdb /*#c4afc4*/
 }
 #privacy-content,
-#imprint-content {
+#imprint-content,
+#access-content {
     /* padding-top: 3rem; */
     padding-bottom: 3rem;
     padding-left: 2rem;
@@ -257,7 +258,8 @@ body {
 }
 #privacy-content p,
 #imprint-content p,
-#imprint-content ul {
+#imprint-content ul,
+#access-content ul {
     font-size: 1.1rem;
     color: rgba(0, 0, 0, 1);
     font-weight: 400;
@@ -265,12 +267,14 @@ body {
 }
 #privacy-content a:hover,
 #imprint-content a:hover,
+#access-content a:hover,
 .checkbox a:hover {
     text-decoration: underline;
 }
 [data-theme='dark'] #privacy-content p,
 [data-theme='dark'] #imprint-content p,
-[data-theme='dark'] #imprint-content ul {
+[data-theme='dark'] #imprint-content ul,
+[data-theme='dark'] #access-content ul {
     color: rgba(255, 255, 255, 0.7);
 }
 #web-navbarMenu {

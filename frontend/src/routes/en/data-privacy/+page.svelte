@@ -1,5 +1,6 @@
 <script>
   import Navbar from "$lib/components/websiteNavbar.svelte";
+  import { language } from "$lib/stores/items";
 </script>
 
 <div>
@@ -16,7 +17,7 @@
         customize (e.g. display mode and language). The LLM initially generates
         a short story out of five randomly selected words from the pre-stored
         vocabulary data. When the user clicks on words in the story text that he
-        doesn't know their meaning, a pop-up window appears directly that shows
+        does not know their meaning, a pop-up window appears directly that shows
         the translation of the selected word in English, the word type (noun,
         verb, etc.), its article if a noun, and an example of the word usage in
         English and German. After the user clicks on the "Next Story" button,
@@ -38,7 +39,10 @@
         >
         of the GWDG. We alse advise the user to consider the third-parties involved
         in AILLA, which are listed in our
-        <a href="/imprint" target="_blank" rel="noopener noreferrer">Imprint</a
+        <a
+          href={`/${$language}/imprint`}
+          target="_blank"
+          rel="noopener noreferrer">Imprint</a
         >.
       </p>
       <h3>Scope of the processing of personal data</h3>
@@ -49,7 +53,7 @@
         a self-hosted pocketbase server, which is used to manage the user
         accounts and the user data created on the UI. The data stored in the
         database are only accessible to the user and the provider of AILLA. The
-        provider doesn't share any personal data with third parties, except for
+        provider does not share any personal data with third parties, except for
         sharing the users' selected words with the GWDG which is the LLM
         provider.
       </p>
@@ -90,11 +94,13 @@
       <p>
         The user has the right to object to the processing of his personal data
         at any time. Right to withdraw his/her consents in terms of data
-        protection laws (Article 7 (3) GDPR). The withdrawal of consent doesn't
+        protection laws (Article 7 (3) GDPR). The withdrawal of consent does not
         affect the lawfulness of processing based on such consent before its
-        withdrawal. To withdraw your consent, please find the contact of the
-        provider <a href="/imprint" target="_blank" rel="noopener noreferrer"
-          >here</a
+        withdrawal. To withdraw your consent, please contact the AILLA provider
+        directly. You can find the contact information <a
+          href={`/${$language}/imprint`}
+          target="_blank"
+          rel="noopener noreferrer">here</a
         >.
       </p>
     </div>

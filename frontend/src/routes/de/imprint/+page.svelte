@@ -1,5 +1,6 @@
 <script>
   import Navbar from "$lib/components/websiteNavbar.svelte";
+  import { language } from "$lib/stores/items";
 </script>
 
 <div>
@@ -17,7 +18,7 @@
         englischen als AILLA.
       </p>
 
-      <h3>Anbieter & Herausgeber</h3>
+      <h3>Anbieter und Herausgeber</h3>
       <p>Diese Website wird bereitgestellt von:</p>
       <p>
         MSc. Mohamed Aly<br />
@@ -108,10 +109,12 @@
       </ul>
       <p>
         Sie können mehr über die Verarbeitung der Benutzerdaten in unserer <a
-          href="/data-privacy">Datenschutzrichtlinie</a
+          href={`/${$language}/data-privacy`}
+          target="_blank"
+          rel="noopener noreferrer">Datenschutzrichtlinie</a
         > erfahren.
       </p>
-      <h3>Lizenz & Urheberrecht</h3>
+      <h3>Lizenz und Urheberrecht</h3>
       <p>
         Die Inhalte dieser Website stehen unter der <a
           href="https://creativecommons.org/licenses/by-nc/4.0/deed.en"

@@ -1,5 +1,6 @@
 <script>
   import Navbar from "$lib/components/websiteNavbar.svelte";
+  import { language } from "$lib/stores/items";
 </script>
 
 <div>
@@ -14,7 +15,7 @@
       <h3>Website</h3>
       <p>AI Language Learning App, abbreviated as AILLA.</p>
 
-      <h3>Provider & Editor</h3>
+      <h3>Provider and editor</h3>
       <p>This Website is provided by:</p>
       <p>
         MSc. Mohamed Aly<br />
@@ -32,7 +33,7 @@
       </p>
       <h3>Legal Structure</h3>
       <p>
-        AILLA is a <strong>non-profit</strong> personal project and isn't associated
+        AILLA is a <strong>non-profit</strong> personal project and is not associated
         with any company or organization. The website is maintained by Mr. Mohamed
         Aly, who is responsible for its content and operation.
       </p>
@@ -45,7 +46,7 @@
         Language Model (LLM) remains within the learning goals and the purpose
         of the website. However, LLMs can sometimes hallucinate and generate
         inaccurate ,misleading or even unlawful content. Therefore, the provider
-        isn't liable for any damages or losses arising from the direct or
+        is not liable for any damages or losses arising from the direct or
         indirect use of the website.
       </p>
       <h3>Third Parties</h3>
@@ -100,10 +101,12 @@
       </ul>
       <p>
         You can read more about the processing of user's data in our <a
-          href="/data-privacy">Privacy Policy</a
+          href={`/${$language}/data-privacy`}
+          target="_blank"
+          rel="noopener noreferrer">Privacy Policy</a
         >.
       </p>
-      <h3>License & Copyright</h3>
+      <h3>License and copyright</h3>
       <p>
         The content on this website licensed under the <a
           href="https://creativecommons.org/licenses/by-nc/4.0/deed.en"

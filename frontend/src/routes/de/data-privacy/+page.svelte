@@ -1,5 +1,6 @@
 <script>
   import Navbar from "$lib/components/websiteNavbar.svelte";
+  import { language } from "$lib/stores/items";
 </script>
 
 <div>
@@ -42,8 +43,10 @@
         >
         der GWDG zu beachten. Wir empfehlen dem Nutzer außerdem, die an AILLA beteiligten
         Drittanbieter zu berücksichtigen, die in unserem
-        <a href="/imprint" target="_blank" rel="noopener noreferrer"
-          >Impressum</a
+        <a
+          href={`/${$language}/imprint`}
+          target="_blank"
+          rel="noopener noreferrer">Impressum</a
         >
         aufgeführt sind.
       </p>
@@ -108,7 +111,7 @@
         Rechtmäßigkeit der Verarbeitung, die auf der Grundlage dieser
         Einwilligung vor deren Widerruf erfolgt ist. Um Ihre Einwilligung zu
         widerrufen, finden Sie die Kontaktdaten des Anbieters <a
-          href="/imprint"
+          href={`/${$language}/imprint`}
           target="_blank"
           rel="noopener noreferrer">hier</a
         >.
