@@ -69,8 +69,8 @@
           verschwinden.
         </li>
         <li>
-          Anpassung der Website an den mobilen Modus (kleine Bildschirme mit
-          weniger als 300px).
+          Anpassung der Website an den mobilen Modus (kleine Bildschirme bis zum
+          300px).
         </li>
       </ul>
       <p>
@@ -116,7 +116,7 @@
       </p>
       <h3>Kontakt zur Schlichtungsstelle</h3>
       <p>
-        Schlichtungsstelle nach dem Behinerungsgleichstellungsgesetz (BGG)<br
+        Schlichtungsstelle nach dem Behindertengleichstellungsgesetz (BGG)<br
         /><br />
         bei dem Beauftragten der Bundesregierung für die Belange von Menschen mit
         Behinderungen<br /><br />

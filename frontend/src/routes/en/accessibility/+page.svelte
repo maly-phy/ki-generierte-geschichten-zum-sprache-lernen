@@ -60,8 +60,8 @@
           seconds).
         </li>
         <li>
-          Adjustability of the website to the mobile mode (small screens less
-          than 300px).
+          Adjustability of the website to the mobile mode (small screens upto
+          300px).
         </li>
       </ul>
       <p>The designs, which are not barrier-free are listed below.</p>
