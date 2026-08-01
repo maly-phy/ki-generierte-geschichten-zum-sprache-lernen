@@ -133,4 +133,14 @@ bun backend/src/pb_fill_vocabs.js
 
 #### Pocketbase Settings
 
-In the `Settings/Application` change the application name to `AILLA`. Configure the `Settings/Mail settings` to enable receiving emails from Pocketbase to either verify your account or to reset your password. Register in one of the providing SMTP server services (e.g. Brevo) and fill in your SMTP server access details. This is important so that the Pocketbase can communicate with the user. Then, click on `Send test email` to check if your configurations work as expected.
+In the `Settings/Application` change the application name to `AILLA`. Configure the `Settings/Mail settings` to enable receiving emails from Pocketbase to either verify your account or to reset your password. Register in one of the providing SMTP server services (e.g. Brevo) and fill in your SMTP server access details. Save the generated SMTP password in the `.env` file
+
+```bash
+SMTP_KEY=""
+```
+
+This is important so that the Pocketbase can communicate with the user. Then, click on `Send test email` to check if your configurations work as expected.
+
+### Backend
+
+We use a locally hosted [Hono](https://hono.dev/) server
