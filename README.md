@@ -17,6 +17,8 @@ Each next story is saved automatically in the user's database (associated with h
 
 ## Getting Started
 
+### Installation
+
 To install the AILLA project on your system in the `Dev mode`, first clone the project
 
 ```bash
@@ -24,9 +26,44 @@ git clone https://gitlab.gwdg.de/webdev/2026/ki-generierte-geschichten-zum-sprac
 cd ki-generierte-geschichten-zum-sprache-lernen
 ```
 
-Create `.env` file where your credentials will be placed.
+Create `.env` file at the root directory of the project, where your credentials will be placed.
 
-We use `bun` to install all needed packages and their dependencies. The AILLA website is divided into three parts; database, backend, and frontend.
+We use `bun` to install all needed packages and their dependencies. Therefore, it is recommended to install the latest stable `node` version
+
+```bash
+nvm install --lts
+nvm use --lts
+```
+
+To set the latest `node.js` version as default, run
+
+```bash
+nvm alias default <version>
+nvm use
+node -v
+```
+
+Then install the required packages of every part of the project, using the `package.json` for every separate part.
+
+```bash
+cd ki-generierte-geschichten-zum-sprache-lernen
+bun install
+```
+
+```bash
+cd ./api_server
+bun install
+```
+
+```bash
+cd ../frontend
+bun install
+cd ../
+```
+
+We use `SvelteKit` for the frontend and it is recommended to install the accompanying .vscode extension of `Svelte`. To do that, search in the VSCode extensions for `Svelte for VS Code`.
+
+The AILLA project is divided into three parts; database, backend, and frontend.
 
 ### Database
 
@@ -133,14 +170,59 @@ bun backend/src/pb_fill_vocabs.js
 
 #### Pocketbase Settings
 
-In the `Settings/Application` change the application name to `AILLA`. Configure the `Settings/Mail settings` to enable receiving emails from Pocketbase to either verify your account or to reset your password. Register in one of the providing SMTP server services (e.g. Brevo) and fill in your SMTP server access details. Save the generated SMTP password in the `.env` file
+In the `Settings/Application` change the application name to `AILLA` and make sure that the `Application URL` is set to `http://localhost_8090`.
+
+Configure the `Settings/Mail settings` to enable receiving emails from Pocketbase to either verify your account or to reset your password. Add `Sender name` and `Sender address` which the Pocketbase will use to communicate with the registered users.
+
+Register in one of the providing SMTP server services (e.g. Brevo) and fill in your SMTP server access details. Save the generated SMTP password in the `.env` file
 
 ```bash
 SMTP_KEY=""
 ```
 
-This is important so that the Pocketbase can communicate with the user. Then, click on `Send test email` to check if your configurations work as expected.
+Then, click on `Send test email` to check if your configurations work as expected.
 
 ### Backend
 
-We use a locally hosted [Hono](https://hono.dev/) server
+We use the open source model `meta-llama-3.1-8b-instruct` to generate the stories. The model is provided from the `GWDG` through an API authentication token. You can place your own credentials in the `.env` file
+
+```bash
+API_KEY=""
+API_ENDPOINT=""
+```
+
+We use a locally hosted [Hono](https://hono.dev/) server to run the backend. You can start the server with
+
+```bash
+cd ./api_server
+bun run dev
+```
+
+which opens `http://localhost:3000`
+
+### Frontend
+
+The locally hosted [Svelte](https://svelte.dev/) server is implemented
+
+```bash
+cd ./frontend
+bun run dev
+```
+
+which opens `http://localhost:5173`
+
+## License
+
+<p align='justify'>
+The project is licensed under the <a
+          href="https://creativecommons.org/licenses/by-nc/4.0/deed.en"
+          target="_blank"
+          rel="noopener noreferrrer">Creative Commons</a
+        > Attribution-NonCommercial 4.0 International license. The content is subject
+to the German copyright law. Any duplication, processing, distribution, or
+any form of commercialization of such material beyond the scope of copyright
+law requires the prior written consent of the provider. Downloads and copies
+of this website are only permitted for educational and non-commercial use.
+</p>
+
+<p>© AILLA. All rights reserved.</p>
