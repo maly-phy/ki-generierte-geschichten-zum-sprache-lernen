@@ -2,7 +2,7 @@
   import "../app.css";
   import { page } from "$app/state";
   import { theme, language } from "$lib/stores/items";
-  import favicon from "$lib/assets/favicon.png";
+  import favicon from "$lib/assets/favicon.svg";
 
   let { children } = $props();
 
@@ -22,7 +22,7 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={favicon} />
+  <link rel="icon" type="image/svg+xml" href={favicon} />
 </svelte:head>
 
 {@render children()}
