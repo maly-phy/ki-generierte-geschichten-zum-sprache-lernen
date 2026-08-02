@@ -77,7 +77,7 @@ Die Architektur der Anwendung ist unten dargestellt.
 
 <p align='center'>
     <picture>
-        <img alt='Architektur Diagramm' src='./assets/architektur.png' >
+        <img alt='Architektur Diagramm' src='./assets/architektur1.png' >
     </picture>
 </p>
 
