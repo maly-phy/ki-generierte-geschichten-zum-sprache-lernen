@@ -1,4 +1,21 @@
-## Prüfungstemplate für Introduction into Web Development
+# Prüfungstemplate für Introduction into Web Development
+
+- [Anmeldedaten](#anmeldedaten)
+- [Abstract](#abstract)
+- [Überblick über den Funktionsumfang](#überblick-über-den-funktionsumfang)
+- [Architektur](#architektur)
+- [Frontend](#frontend)
+- [Ansichten und Interaktionsmöglichkeiten](#ansichten-und-interaktionsmöglichkeiten)
+- [Technische Umsetzung](#technische-umsetzung)
+- [Besondere Herausforderungen](#besondere-herausforderungen)
+- [Backend](#backend)
+- [Kommunikationsschnittstellen und APIs](#kommunikationsschnittstellen-und-apis)
+- [Authentifizierung und Autorisierung](#authentifizierung-und-autorisierung)
+- [Datenbank](#datenbank)
+- [Barrierefreiheit](#barrierefreiheit)
+- [Datenschutz](#datenschutz)
+
+## Anmeldedaten
 
 Titel: KI-generierte Geschichtern zum Sprache Lernen<br />
 Matrikelnummer: 29749085<br />
@@ -207,7 +224,7 @@ F: Falls bestehende/externe APIs verwendet werden: Welche Routen/Endpunkte werde
 
 F: Gibt es ein Registrierungs- und/oder Anmeldungsystem?
 
-Ja, bereits in den vorherigen Fragen beschrieben.
+- Ja, bereits in den vorherigen Fragen beschrieben. Siehen Sie in [Ansichten und Interaktionsmöglichkeiten](#ansichten-und-interaktionsmöglichkeiten).
 
 F: Welche Bereiche des Systems sind schützenswert?
 
@@ -255,8 +272,86 @@ F: Wie wird sichergestellt, dass nur erlaubte bzw. autorisierte Zugriffe zugelas
 
 F: Was wird als Datenbanklösung verwendet?
 
-Pocketbase
+- Pocketbase, Siehen Sie in [Architektur](#architektur)
 
 F: Welche Daten beinhaltet die Datenbank und wie sind sie strukturiert?
 
-You can find the schemas of collections [here](./data/pb_collections)
+- Die Schemata der Sammlungen finden Sie [hier](./data/pb_collections) sowie im Abschnitt [Datenbank](./README.md#database) der README.md-Datei.
+
+## Barrierefreiheit
+
+[Mehr Info hier](./frontend/src/routes/de/accessibility/+page.svelte)
+
+F: In welchem Umfang ist die WebApp barrierefrei nutzbar?
+
+- Die Website entspricht teilweise der EU-Richtlinie 2016/2102. Es gibt jedoch noch einige Bereiche, die die Anforderungen der EU-Richtlinie 2016/2102 nicht erfüllen. Folgende Barrierefreiheitsfunktionen stehen zur Verfügung:
+
+- Hoher Farbkontrast für alle Funktionen der Website mit ausreichenden
+  Abständen zwischen den Elementen.
+- Es stehen zwei Designs zur Verfügung (hell und dunkel).
+- Alle Seiten werden in zwei Sprachen (Englisch und Deutsch) unterstützt.
+- Tastaturnavigation zwischen allen Funktionen mit der Möglichkeit, eine
+  Funktion auszuwählen (Enter-Taste) oder ein Burger-Menü zu schließen (Esc-Taste oder Leertaste). Alle
+  Funktionen sind über einen kurzen Pfad erreichbar und werden hervorgehoben, wenn sie im Fokus stehen.
+- Mausereignisse werden unterstützt, wobei ein Menü durch
+  einen Mausklick außerhalb des Menüs geschlossen werden kann und automatisch geschlossen wird, sobald der
+  Nutzer auf ein anderes Element auf der Seite klickt.
+- Anmeldedaten können im Browser gespeichert werden (nach Wahl des Nutzers) und
+  werden dann bei zukünftigen Anmeldungen automatisch ausgefüllt.
+- Bei jeder Aktion werden dem Nutzer Informationsmeldungen angezeigt, die
+  nach einer bestimmten Zeit (~ 5
+  Sekunden) automatisch verschwinden.
+- Anpassung der Website an den mobilen Modus (kleine Bildschirme bis zu
+  300px).
+
+Folgende Elemente sind nicht barrierefrei:
+
+- Easy und Gebärdensprache werden nicht unterstützt.
+- Die Größe des Website-Symbols im Browser ist klein und wird
+  vom Browser gesteuert.
+
+F: Welche Standards wurden berücksichtigt?
+
+- EU-Richtlinie 2016/2102, das Gesetz gegen die Diskriminierung von Menschen mit Behinderungen (BGG) und die Richtlinien für barrierefreie Webinhalte (WCAG) im Rahmen einer Selbstbewertung.
+
+F: Wie wurde die barrierefreiheit getestet?
+
+- Durch die Navigation mit der Tastatur im Dashboard und das Öffnen von Elementen durch Drücken der `Enter`-Taste oder das Schließen durch Drücken der `ESC`- oder `Leertaste`. Außerdem werden Mausklicks ausgelöst, um die Popup-Fenster der Lernkarte oder das Burger-Menü in der Navigationsleiste zu schließen.
+
+## Datenschutz
+
+[Mehr Info hier](./frontend/src/routes/de/data-privacy/+page.svelte)
+
+F: Wie wurde privacy by design bei Architektur und Design des Systems berücksichtigt?
+
+- **Datenminimierung und Zweckbindung:** Es werden nur die für den Betrieb des Dienstes erforderlichen Daten verarbeitet, und die Verarbeitung erfolgt ausschließlich mit Einwilligung des Nutzers (Art. 6 Abs. 1 Buchstabe a DSGVO).
+
+- **Getrennte Architektur mit kontrollierten Datenflüssen:** Die App ist in Frontend, Backend und ein extern gehostetes LLM (SAIA/GWDG) unterteilt, und es werden nur ausgewählte Wörter an den LLM-Anbieter weitergegeben, nicht jedoch alle Nutzerdaten.
+
+- **Kontrollierter Speicherort:** Registrierungs- und Nutzerdaten werden auf einem selbst gehosteten PocketBase-Server zur Konto- und Datenverwaltung gespeichert.
+
+- **Zugriffsbeschränkung:** Auf die gespeicherten Datenbankdaten haben laut Beschreibung nur der Nutzer und der Website-Anbieter Zugriff.
+
+- **Begrenzte Weitergabe an Dritte:** Der Anbieter gibt an, dass er keine personenbezogenen Daten an Dritte weitergibt, mit Ausnahme ausgewählter Wörter, die zur Nutzung der LLM-Funktionalität an die GWDG gesendet werden.
+
+- **Transparenz bezüglich Dritter und Verantwortlichkeiten:** Die Nutzer werden für Informationen zu Dritten auf die Datenschutzerklärung der GWDG und das Impressum des Projekts verwiesen.
+
+- **In die Richtlinie/den Prozess integrierte Kontrollrechte der Nutzer:** Rechte auf Auskunft, Löschung, Widerspruch und Widerruf der Einwilligung, einschließlich Kontaktmöglichkeiten sowohl für den Website-Anbieter als auch für die GWDG, sofern relevant.
+
+F: Welche personenbezogenen Daten werden verarbeitet/gespeichert?
+
+- E-Mail-Adresse, Passwort, vom Nutzer ausgewählte Wörter und die daraus generierte Geschichte.
+
+F: Werden besondere Kategorien personenbezogener Daten verarbeitet?
+Nein
+
+F: Welche Betroffenenrechte (Auskunft, Löschung, Änderung, Widerspruch, usw.) können automatisiert und selbstständig unmittelbar über die Webanwendung wahrgenommen werden? Welche benötigen manuelle Schritte, z.B. durch einen Administrator?
+
+- Kann vom Benutzer im Frontend verwaltet werden:
+  - Abmelden und damit Löschen des Sitzungstokens aus den Cookies.
+  - Löschen des Kontos und aller dazugehörigen Daten.
+  - Schreiben in die `vocab_user_data` seines Kontos (ausgewählte Wörter, Geschichte).
+  - Anlegen und Aktualisieren von Datensätzen in der Sammlung `vocabulary`, die von allen Benutzern gemeinsam genutzt wird.
+
+- Kann vom Benutzer in der Pocketbase verwaltet werden:
+  - Der Benutzer hat das Recht, seine Daten in der Pocketbase gemäß den für jede Sammlung festgelegten API-Regeln zu verwalten. Einige Zugriffs- und Änderungsrechte können jedoch nur vom Administrator verwaltet werden. Siehen Sie den [Abschnitt Details](./README.md#pocketbase-collections).
