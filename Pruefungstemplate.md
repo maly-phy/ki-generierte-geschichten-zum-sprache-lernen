@@ -259,4 +259,4 @@ Pocketbase
 
 F: Welche Daten beinhaltet die Datenbank und wie sind sie strukturiert?
 
-You can find the schemas of collections [here](../data/pb_collections)
+You can find the schemas of collections [here](./data/pb_collections)
