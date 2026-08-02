@@ -68,6 +68,7 @@ The AILLA project is divided into three parts; database, backend, and frontend.
 ### Database
 
 - We use the dataset of the [1000 most common German words](https://www.kaggle.com/datasets/harounqer/1000-german-words) to randomly pick vocabularies from to generate the first story or the next stories.
+
 - We use a locally hosted [Pocketbase](https://pocketbase.io/) server to store the vocabulary dataset, the user authentication information, and the user data from the dashboard.
 
 Since the size of vocabulary data is relatively small (~15 kB), we already pushed it to the repository under the `data` directory. To get started with Pocketbase, you need to firstly build it in your system following the pocketbase installation guide, then open the local server
