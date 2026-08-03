@@ -2,7 +2,7 @@
   import { toggleTheme, toggleLanguage, clickOutside } from "./utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
-  import logo from "$lib/assets/logo.png";
+  import logo from "$lib/assets/logo.svg";
 
   let mounted = $state(false);
   let mobileMenuOpen = $state(false);
@@ -26,7 +26,6 @@
       <img src={logo} alt="Logo" class="custom-logo" />
     </a>
     <button
-      role="button"
       class="navbar-burger {mobileMenuOpen ? 'is-active' : ''}"
       aria-label="menu"
       aria-expanded={mobileMenuOpen}

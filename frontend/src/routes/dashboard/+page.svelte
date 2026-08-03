@@ -8,7 +8,7 @@
   } from "$lib/components/utils";
   import { theme, language } from "$lib/stores/items";
   import { onMount } from "svelte";
-  import logo from "$lib/assets/logo.png";
+  import logo from "$lib/assets/logo.svg";
 
   let mounted = $state(false);
   let offsetWords = $state<string[]>([]);
